@@ -176,6 +176,7 @@ public class FintList implements Iterable<Integer> {
     boolean isEmpty(){
         if (head == free_index) return true;
         return false;
+        //comentario random
     }
 
     public static void main(String[] args) {
