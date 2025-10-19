@@ -134,56 +134,74 @@ public class FintList implements Iterable<Integer> {
         if (index < 0) {
             throw new IndexOutOfBoundsException("Indice invalido");
         }
+        if (head == -1) {
+            if (index > 0)
+                throw new IndexOutOfBoundsException("Lista vazia");
+            add(item);
+        } else {
+            int atual = head;
+            for (int i = 1; i < index; i++) { // percorre a lista até elemento anterior do index desejado
+                atual = elements[atual].next_index;
+                if (atual == -1)
+                    throw new IndexOutOfBoundsException("Indice maior que a lista ligada");
+            }
+
+            int tail_temp = this.tail;
+            tail = atual;
+            System.out.println("atual: " + atual + " tail: " + tail);
+            int next = elements[atual].next_index;
+
+            add(item); //adiciona o elemento a lista
+
+            if (index == 0) {
+                elements[head].prev_index = tail;
+                elements[head].next_index = next;
+                elements[tail].next_index = head;
+                elements[tail].prev_index = -1;
+
+                head = tail;
+            } else {
+                elements[tail].next_index = next; //Faz o elemento novo apontar para o elemento que estava no index anteriormente
+
+                if (next != -1)
+                    elements[next].prev_index = tail;
+                else {
+                    elements[tail].prev_index = tail_temp;
+                }
+            }
+
+            if (index != tail) //Caso não estejamos a adicionar no final
+                tail = tail_temp;
+        }
+    }
+
+    void set(int index, int value) {
         int atual = head;
-        for (int i = 1; i < index; i++) { // percorre a lista até elemento anterior do index desejado
-            atual = elements[atual].next_index;
-            if (atual == -1)
-                throw new IndexOutOfBoundsException("Indice maior que a lista ligada");
-        }
-
-        int tail_temp = this.tail;
-        tail = atual;
-        System.out.println("atual: " + atual + " tail: " + tail);
-        int next = elements[atual].next_index;
-
-        add(item); //adiciona o elemento a lista
-
-        elements[tail].next_index = next; //Faz o elemento novo apontar para o elemento que estava no index anteriormente
-
-        if (next != -1)
-            elements[next].prev_index = tail;
-        else {
-            elements[tail].prev_index = tail_temp;
-        }
-        if (index != tail)
-            tail = tail_temp;
-
-    }    void set(int index,int value) {
-        int atual=head;
         for (int i = 0; i < index; i++) {
-            if (atual==-1) throw new IndexOutOfBoundsException("Index invalid");
+            if (atual == -1) throw new IndexOutOfBoundsException("Index invalid");
             atual = elements[atual].next_index;
         }
         elements[atual].value = value;
     }
-    int size(){
+
+    int size() {
         if (head == -1) return 0;
-        int atual=head;
-        int size=0;
-        while (atual!=-1){
-            atual=elements[atual].next_index;
+        int atual = head;
+        int size = 0;
+        while (atual != -1) {
+            atual = elements[atual].next_index;
             size++;
         }
         return size;
     }
-    boolean isEmpty(){
-        if (head == free_index) return true;
-        return false;
+
+    boolean isEmpty() {
+        return head == free_index;
     }
 
     public static void main(String[] args) {
         FintList teste = new FintList();
-        teste.add(1);
+        teste.addAt(0, 1);
         teste.add(2);
         teste.add(3);
         teste.add(4);
@@ -198,7 +216,7 @@ public class FintList implements Iterable<Integer> {
         for (int v : teste)
             System.out.println(v);
 
-        teste.addAt(5, 87);
+        teste.addAt(0, 87);
 
         //teste.addAt(3, 89);
         //teste.addAt(0, 87);
