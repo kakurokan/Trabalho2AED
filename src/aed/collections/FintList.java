@@ -134,24 +134,30 @@ public class FintList implements Iterable<Integer> {
         if (index < 0) {
             throw new IndexOutOfBoundsException("Indice invalido");
         }
-
-        if (index == head) {
-
-        } else {
-            int atual = head;
-            for (int i = 1; i < index; i++) { // percorre a lista até elemento anterior do index desejado
-                atual = elements[atual].next_index;
-            }
-
-            int tail_temp = this.tail;
-            tail = atual;
-            int next = elements[atual].next_index;
-
-            add(item); //adiciona o elemento a lista
-
-            elements[tail].next_index = next; //Faz o elemento novo apontar para o elemento que estava no index anteriormente
-            tail = tail_temp;
+        int atual = head;
+        for (int i = 1; i < index; i++) { // percorre a lista até elemento anterior do index desejado
+            atual = elements[atual].next_index;
+            if (atual == -1)
+                throw new IndexOutOfBoundsException("Indice maior que a lista ligada");
         }
+
+        int tail_temp = this.tail;
+        tail = atual;
+        System.out.println("atual: " + atual + " tail: " + tail);
+        int next = elements[atual].next_index;
+
+        add(item); //adiciona o elemento a lista
+
+        elements[tail].next_index = next; //Faz o elemento novo apontar para o elemento que estava no index anteriormente
+
+        if (next != -1)
+            elements[next].prev_index = tail;
+        else {
+            elements[tail].prev_index = tail_temp;
+        }
+        if (index != tail)
+            tail = tail_temp;
+
     }
 
     public static void main(String[] args) {
@@ -171,10 +177,14 @@ public class FintList implements Iterable<Integer> {
         for (int v : teste)
             System.out.println(v);
 
-        teste.addAt(0, 87);
+        teste.addAt(5, 87);
+
+        //teste.addAt(3, 89);
+        //teste.addAt(0, 87);
         System.out.println("Elementos: ");
         for (int v : teste)
             System.out.println(v);
         System.out.println("head: " + teste.elements[teste.head].value);
+        System.out.println("tail: " + teste.elements[teste.tail].value);
     }
 }
