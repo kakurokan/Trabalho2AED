@@ -87,8 +87,8 @@ public class FintList implements Iterable<Integer> {
             IntNode newNode = new IntNode(item, -1, tail);
 
             int next_free_index = free_index;
-            if (elements[free_index] != null)
-                next_free_index = elements[free_index].next_index;
+            if (elements[free_index] != null) //Caso exista espaço lixo dentro do array
+                next_free_index = elements[free_index].next_index; //Guarda o proximo espaço lixo
 
             elements[free_index] = newNode;
             elements[tail].next_index = free_index;
@@ -134,16 +134,24 @@ public class FintList implements Iterable<Integer> {
         if (index < 0) {
             throw new IndexOutOfBoundsException("Indice invalido");
         }
-        int atual = 0, temp = head;
-        for (int i = 0; i <= index; i++) { // percorre a lista ao indice desejado//
-            atual = temp;
-            temp = elements[temp].next_index;
+
+        if (index == head) {
+
+        } else {
+            int atual = head;
+            for (int i = 1; i < index; i++) { // percorre a lista até elemento anterior do index desejado
+                atual = elements[atual].next_index;
+            }
+
+            int tail_temp = this.tail;
+            tail = atual;
+            int next = elements[atual].next_index;
+
+            add(item); //adiciona o elemento a lista
+
+            elements[tail].next_index = next; //Faz o elemento novo apontar para o elemento que estava no index anteriormente
+            tail = tail_temp;
         }
-        int tail_temp = this.tail;
-        add(item); //adicina o elemento a lista
-        elements[elements[atual].prev_index].next_index = tail; //o next do elemento anterior ao indice desejado passa a apontar para o elemento adicionado
-        elements[atual].prev_index = tail; //o antigo elemento no indice(index) passa a ter o prev no eleento novo
-        tail = tail_temp;
     }
 
     public static void main(String[] args) {
@@ -162,5 +170,11 @@ public class FintList implements Iterable<Integer> {
         System.out.println("Elementos: ");
         for (int v : teste)
             System.out.println(v);
+
+        teste.addAt(0, 87);
+        System.out.println("Elementos: ");
+        for (int v : teste)
+            System.out.println(v);
+        System.out.println("head: " + teste.elements[teste.head].value);
     }
 }
