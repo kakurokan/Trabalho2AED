@@ -152,29 +152,45 @@ public class FintList implements Iterable<Integer> {
             elements[tail].next_index = next; //Faz o elemento novo apontar para o elemento que estava no index anteriormente
             tail = tail_temp;
         }
+
+    }
+
+    void set(int index,int value) {
+        int atual=head;
+        for (int i = 0; i < index; i++) {
+            if (atual==-1) throw new IndexOutOfBoundsException("Index invalid");
+            atual = elements[atual].next_index;
+        }
+        elements[atual].value = value;
+    }
+    int size(){
+        if (head == -1) return 0;
+        int atual=head;
+        int size=0;
+        while (atual!=-1){
+            atual=elements[atual].next_index;
+            size++;
+        }
+        return size;
+    }
+    boolean isEmpty(){
+        if (head == free_index) return true;
+        return false;
     }
 
     public static void main(String[] args) {
         FintList teste = new FintList();
-        teste.add(1);
-        teste.add(2);
-        teste.add(3);
         teste.add(4);
         teste.add(5);
         teste.add(10);
-        System.out.println(teste.remove());
-        System.out.println(teste.remove());
-        System.out.println(teste.remove());
         teste.add(47);
+        teste.add(47);
+        teste.addAt(4, 50);
         teste.add(39);
         System.out.println("Elementos: ");
         for (int v : teste)
             System.out.println(v);
 
-        teste.addAt(0, 87);
-        System.out.println("Elementos: ");
-        for (int v : teste)
-            System.out.println(v);
-        System.out.println("head: " + teste.elements[teste.head].value);
+
     }
 }
