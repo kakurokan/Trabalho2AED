@@ -39,6 +39,7 @@ public class FintList {
                 }
                 int valor = current;
                 current = elements[current].next_index;
+                System.out.println(elements[valor].value);
                 return valor;
             }
         };
@@ -113,15 +114,17 @@ public class FintList {
         if (index < 0) {
             throw new IndexOutOfBoundsException("Indice invalido");
         }
-
         Iterator<Integer> iterator = iterator();
-        while (index!=0&&iterator.hasNext()) {
+        while (index != 0 && iterator.hasNext()) {
             iterator.next();
             index--;
         }
-        int atual=iterator.next();
+        int atual = iterator.next();
+        int tail_temp = this.tail;
         add(item);
-
+        elements[elements[atual].prev_index].next_index = tail;
+        elements[atual].prev_index = tail;
+        tail = tail_temp;
     }
 
     public static void main(String[] args) {
@@ -130,14 +133,11 @@ public class FintList {
         teste.add(2);
         teste.add(3);
         teste.add(4);
-        System.out.println(teste.remove());
-        System.out.println(teste.remove());
-        System.out.println(teste.remove());
-        System.out.println(teste.remove());
-        teste.add(2);
-        System.out.println(teste.remove());
         teste.add(5);
         teste.add(10);
-
+        teste.addAt(4,21);
+        System.out.println(teste.remove());
+        System.out.println(teste.remove());
+        System.out.println(teste.remove());
     }
 }
