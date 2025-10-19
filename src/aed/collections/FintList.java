@@ -81,7 +81,7 @@ public class FintList implements Iterable<Integer> {
             this.tail = this.free_index;
 
             elements[this.free_index] = new IntNode(item, -1, -1);
-            System.out.println("Esta é a " + free_index + " e adicionou" + item);
+            System.out.println("Esta é a " + free_index + " e adicionou " + item);
             free_index++;
         } else {
             IntNode newNode = new IntNode(item, -1, tail);
@@ -94,7 +94,7 @@ public class FintList implements Iterable<Integer> {
             elements[tail].next_index = free_index;
             tail = free_index;
 
-            System.out.println("Esta é a " + free_index + " e adicionou" + newNode.value);
+            System.out.println("Esta é a " + free_index + " e adicionou " + newNode.value);
 
             if (next_free_index != free_index)
                 free_index = next_free_index;
@@ -130,7 +130,7 @@ public class FintList implements Iterable<Integer> {
         return node.value;
     }
 
-    /*void addAt(int index, int item) {
+    void addAt(int index, int item) {
         if (index < 0) {
             throw new IndexOutOfBoundsException("Indice invalido");
         }
@@ -145,7 +145,7 @@ public class FintList implements Iterable<Integer> {
         elements[elements[atual].prev_index].next_index = tail;
         elements[atual].prev_index = tail;
         tail = tail_temp;
-    }*/
+    }
 
     public static void main(String[] args) {
         FintList teste = new FintList();
@@ -158,5 +158,10 @@ public class FintList implements Iterable<Integer> {
         System.out.println(teste.remove());
         System.out.println(teste.remove());
         System.out.println(teste.remove());
+        teste.add(47);
+        teste.add(39);
+        System.out.println("Elementos: ");
+        for (int v : teste)
+            System.out.println(v);
     }
 }
