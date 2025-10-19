@@ -22,7 +22,7 @@ public class FintList implements Iterable<Integer> {
         Iterable.super.forEach(action);
     }
 
-    public class FintListIterator() implements Iterator<Integer> {
+    public class FintListIterator implements Iterator<Integer> {
 
         int nextNodeIndex;
 
