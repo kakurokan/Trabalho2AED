@@ -1,5 +1,7 @@
 package aed.collections;
 
+import java.util.Iterator;
+
 public class FintList {
     private static final int INITIAL_CAPACITY = 10;
 
@@ -21,6 +23,27 @@ public class FintList {
         }
     }
 
+    public Iterator<Integer> iterator() {
+        return new Iterator<Integer>() {
+            private int current = head;
+
+            @Override
+            public boolean hasNext() {
+                return current != -1;
+            }
+
+            @Override
+            public Integer next() {
+                if (!hasNext()) {
+                    throw new java.util.NoSuchElementException();
+                }
+                int valor = current;
+                current = elements[current].next_index;
+                return valor;
+            }
+        };
+    }
+
     public FintList() {
         this.capacity = INITIAL_CAPACITY;
         this.elements = new intNode[capacity];
@@ -40,6 +63,7 @@ public class FintList {
             this.head = this.free_index;
             this.tail = this.free_index;
             elements[this.free_index] = new intNode(item, -1, -1);
+            System.out.println("Esta é a " + free_index + " e adicionou" + item);
             free_index++;
         } else {
             intNode newNode = new intNode(item, -1, tail);
@@ -51,7 +75,7 @@ public class FintList {
             elements[free_index] = newNode;
             elements[tail].next_index = free_index;
             tail = free_index;
-
+            System.out.println("Esta é a " + free_index + " e adicionou" + newNode.value);
             if (next_free_index != -1)
                 free_index = next_free_index;
             else
@@ -65,16 +89,55 @@ public class FintList {
         if (head == -1)
             throw new IndexOutOfBoundsException("Lista vazia");
         intNode node = elements[tail]; //Guarda o no para ‘posteriori’
+        if (this.head == this.tail) {
+            this.free_index = 0;
+            this.tail = -1;
+            this.head = -1;
+            return node.value;
+        } else {
+            elements[elements[tail].prev_index].next_index = -1; //O no que apontava para a cauda para de apontar para qualquer no
 
-        elements[elements[tail].prev_index].next_index = -1; //O no que apontava para a cauda para de apontar para qualquer no
+            //Lógica do free_index para subtituição no add
+            elements[tail].next_index = free_index;
+            free_index = tail;
+            //---
 
-        //Lógica do free_index para subtituição no add
-        elements[tail].next_index = free_index;
-        free_index = tail;
-        //---
+            tail = node.prev_index; //Muda a cauda para o no anterior
 
-        tail = node.prev_index; //Muda a cauda para o no anterior
+            return node.value;
+        }
 
-        return node.value;
+    }
+
+    void addAt(int index, int item) {
+        if (index < 0) {
+            throw new IndexOutOfBoundsException("Indice invalido");
+        }
+
+        Iterator<Integer> iterator = iterator();
+        while (index!=0&&iterator.hasNext()) {
+            iterator.next();
+            index--;
+        }
+        int atual=iterator.next();
+        add(item);
+
+    }
+
+    public static void main(String[] args) {
+        FintList teste = new FintList();
+        teste.add(1);
+        teste.add(2);
+        teste.add(3);
+        teste.add(4);
+        System.out.println(teste.remove());
+        System.out.println(teste.remove());
+        System.out.println(teste.remove());
+        System.out.println(teste.remove());
+        teste.add(2);
+        System.out.println(teste.remove());
+        teste.add(5);
+        teste.add(10);
+
     }
 }
