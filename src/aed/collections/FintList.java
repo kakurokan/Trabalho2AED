@@ -38,6 +38,7 @@ public class FintList {
             return false;
         if (tail == -1) {
             this.head = this.free_index;
+            this.tail = this.free_index;
             elements[this.free_index] = new intNode(item, -1, -1);
             free_index++;
         } else {
@@ -58,5 +59,22 @@ public class FintList {
         }
 
         return true;
+    }
+
+    int remove() {
+        if (head == -1)
+            throw new IndexOutOfBoundsException("Lista vazia");
+        intNode node = elements[tail]; //Guarda o no para ‘posteriori’
+
+        elements[elements[tail].prev_index].next_index = -1; //O no que apontava para a cauda para de apontar para qualquer no
+
+        //Lógica do free_index para subtituição no add
+        elements[tail].next_index = free_index;
+        free_index = tail;
+        //---
+
+        tail = node.prev_index; //Muda a cauda para o no anterior
+
+        return node.value;
     }
 }
