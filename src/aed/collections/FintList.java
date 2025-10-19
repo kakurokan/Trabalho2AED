@@ -134,16 +134,15 @@ public class FintList implements Iterable<Integer> {
         if (index < 0) {
             throw new IndexOutOfBoundsException("Indice invalido");
         }
-        Iterator<Integer> iterator = iterator();
-        while (index != 0 && iterator.hasNext()) {
-            iterator.next();
-            index--;
+        int atual = 0, temp = head;
+        for (int i = 0; i <= index; i++) { // percorre a lista ao indice desejado//
+            atual = temp;
+            temp = elements[temp].next_index;
         }
-        int atual = iterator.next();
         int tail_temp = this.tail;
-        add(item);
-        elements[elements[atual].prev_index].next_index = tail;
-        elements[atual].prev_index = tail;
+        add(item); //adicina o elemento a lista
+        elements[elements[atual].prev_index].next_index = tail; //o next do elemento anterior ao indice desejado passa a apontar para o elemento adicionado
+        elements[atual].prev_index = tail; //o antigo elemento no indice(index) passa a ter o prev no eleento novo
         tail = tail_temp;
     }
 
