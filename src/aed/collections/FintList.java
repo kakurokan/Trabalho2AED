@@ -158,6 +158,27 @@ public class FintList implements Iterable<Integer> {
         if (index != tail)
             tail = tail_temp;
 
+    }    void set(int index,int value) {
+        int atual=head;
+        for (int i = 0; i < index; i++) {
+            if (atual==-1) throw new IndexOutOfBoundsException("Index invalid");
+            atual = elements[atual].next_index;
+        }
+        elements[atual].value = value;
+    }
+    int size(){
+        if (head == -1) return 0;
+        int atual=head;
+        int size=0;
+        while (atual!=-1){
+            atual=elements[atual].next_index;
+            size++;
+        }
+        return size;
+    }
+    boolean isEmpty(){
+        if (head == free_index) return true;
+        return false;
     }
 
     public static void main(String[] args) {
