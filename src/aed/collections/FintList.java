@@ -79,10 +79,39 @@ public class FintList implements Iterable<Integer> {
     }
 
     private void resize(int new_capacity) {
-        IntNode[] new_array = new IntNode[new_capacity];
-        System.arraycopy(elements, 0, new_array, 0, capacity);
-        elements = new_array;
-        capacity = new_capacity;
+        IntNode[] new_array = new IntNode[new_capacity]; //Novo array para o elements
+
+        System.out.println("Resized");
+
+        if (new_capacity < capacity) { //Caso estejamos diminuindo o array
+            int atual = -1;
+
+            if (!isEmpty()) {
+                atual = elements[head].next_index;
+                int next_index = (atual != -1) ? 1 : -1;
+                new_array[0] = new IntNode(elements[head].value, next_index, -1);
+                head = 0;
+            }
+
+            int i = 1;
+            while (atual != -1) {
+                int next_index = elements[atual].next_index != -1 ? i + 1 : -1;
+                IntNode node = new IntNode(elements[atual].value, next_index, i - 1);
+                new_array[i] = node;
+                atual = elements[atual].next_index;
+                i++;
+            }
+
+            tail = isEmpty() ? -1 : i - 1;
+            free_index = tail + 1;
+            elements = new_array;
+            capacity = new_capacity;
+            removedNodes = 0;
+        } else { //Caso estejamos aumentando o array
+            System.arraycopy(elements, 0, new_array, 0, capacity);
+            elements = new_array;
+            capacity = new_capacity;
+        }
     }
 
     boolean add(int item) {
@@ -146,6 +175,11 @@ public class FintList implements Iterable<Integer> {
         }
 
         removedNodes++;
+
+        if (removedNodes > (capacity * 0.75)) { //Caso mais de 3/4 do array for lixo
+            resize(capacity >> 1); //Diminui para metade da capacidade
+        }
+
         return node.value;
     }
 
@@ -242,30 +276,25 @@ public class FintList implements Iterable<Integer> {
         teste.add(3);
         teste.add(4);
         teste.add(5);
+        teste.add(6);
+        teste.add(7);
+        teste.add(8);
+        teste.add(9);
         teste.add(10);
-        System.out.println(teste.remove());
-        System.out.println(teste.remove());
-        System.out.println(teste.remove());
-        teste.add(47);
-        teste.add(39);
-        System.out.println("Elementos: ");
+        teste.remove();
+        teste.remove();
+        teste.remove();
+        teste.remove();
+        teste.remove();
+        teste.remove();
+        teste.remove();
+        teste.remove();
+
+        System.out.println("Capacity: " + teste.capacity);
+
         for (int v : teste)
             System.out.println(v);
 
-        teste.addAt(5, 87);
-        teste.add(90);
-        teste.add(90);
-        teste.add(90);
-        teste.add(90);
-        teste.add(90);
-        teste.add(90);
-        System.out.printf("capacity: " + teste.capacity);
-        teste.addAt(19, 44);
-        //teste.addAt(3, 89);
-        //teste.addAt(0, 87);
-        System.out.println("Elementos: ");
-        for (int v : teste)
-            System.out.println(v);
         System.out.println("head: " + teste.elements[teste.head].value);
         System.out.println("tail: " + teste.elements[teste.tail].value);
     }
