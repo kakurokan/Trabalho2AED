@@ -180,6 +180,36 @@ public class FintList implements Iterable<Integer> {
         if (head == free_index) return true;
         return false;
     }
+    int get(int index) {
+        if (index < 0 || index >= size()) { //verifica se o indice é valido
+            throw new IndexOutOfBoundsException("Indice invalido");
+        }
+        if (isEmpty()) { //veirifica se a lista esta vazia
+            throw new IndexOutOfBoundsException("Lista vazia");
+        }
+        int atual = head;
+        for (int i = 1; i <= index; i++) { //percorre a lista ate o indice desejado
+            atual = elements[atual].next_index;
+
+        }
+        return elements[atual].value;
+    }
+
+    int getFirst() {
+        if (isEmpty()) {throw new IndexOutOfBoundsException("Lista vazia");}
+        return elements[head].value;
+    }
+    int get(){
+        if (isEmpty()) {throw new IndexOutOfBoundsException("Lista vazia");}
+        return elements[tail].value;
+    }
+    void forEach(Consumer<Integer> c) {
+        int atual=head;
+        if (atual==-1){throw new IndexOutOfBoundsException("Lista vazia")}
+        while (atual!=-1) {
+            c.accept(elements[atual].value);
+        }
+    }
 
     public static void main(String[] args) {
         FintList teste = new FintList();
