@@ -331,6 +331,33 @@ public class FintList implements Iterable<Integer> {
         return total;
     }
 
+    void reverse() {
+        if (isEmpty()) throw new IndexOutOfBoundsException("Lista vazia");
+        if (!(elements[head].next_index == -1)) { //lista de apenas um elemento
+            int atual = tail;
+            tail = head; //troca o índice do tail com o do head e vise versa
+            head = atual;
+
+            int temp_index_prev;
+            int temp_index_next;
+
+            elements[atual].next_index = elements[atual].prev_index; //o tail passa a ser o head;
+            temp_index_prev = elements[atual].prev_index;
+            elements[atual].prev_index = -1;
+            atual = temp_index_prev;
+
+            while (elements[atual].prev_index != -1) {
+                temp_index_next = elements[atual].next_index;
+                elements[atual].next_index = elements[atual].prev_index; // inverte o next com o prev
+                temp_index_prev = elements[atual].prev_index;
+                elements[atual].prev_index = temp_index_next;
+                atual = temp_index_prev;
+            }
+
+            elements[atual].next_index = elements[atual].prev_index; //cria o novo head
+        }
+    }
+
     private static class IntNode { //Classe
         int value;
         int next_index;
@@ -342,32 +369,6 @@ public class FintList implements Iterable<Integer> {
             this.prev_index = prev_index;
         }
     }
-
-    void reverse() {
-        if (isEmpty()) throw new IndexOutOfBoundsException("Lista vazia");
-        if (elements[head].next_index==-1){} //lista de apenas um elemento
-        else{
-        int atual = tail;
-        tail=head; //troca o indice do tail com o do head e vise versa
-        head=atual;
-        int temp_index_prev;
-        int temp_index_next;
-        elements[atual].next_index = elements[atual].prev_index; //o tail passa a ser o head;
-        temp_index_prev = elements[atual].prev_index;
-        elements[atual].prev_index = -1;
-        atual = temp_index_prev;
-
-        while (elements[atual].prev_index != -1) {
-            temp_index_next = elements[atual].next_index;
-            elements[atual].next_index = elements[atual].prev_index; // inverte o next com o prev
-            temp_index_prev = elements[atual].prev_index;
-            elements[atual].prev_index = temp_index_next;
-            atual = temp_index_prev;
-        }
-        elements[atual].next_index = elements[atual].prev_index; //cria o novo head
-        elements[atual].prev_index = -1;
-
-    }}
 
     public class FintListIterator implements Iterator<Integer> {
 
