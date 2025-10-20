@@ -1,7 +1,9 @@
 package aed.collections;
 
 import java.util.Iterator;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
 public class FintList implements Iterable<Integer> {
     private static final int INITIAL_CAPACITY = 10;
@@ -268,7 +270,39 @@ public class FintList implements Iterable<Integer> {
         }
         return elements[tail].value;
     }
+    int indexOf(int item) {
+        int atual = head;
+        while (atual != -1 && elements[atual].value != item) {
+            atual = elements[atual].next_index;
+        }
+        if (atual == -1) return -1;
+        return atual;
+    }
 
+    boolean contains(int item) {
+        return indexOf(item) != -1;
+    }
+
+    void map(UnaryOperator<Integer> op) {
+        if (op == null) throw new NullPointerException("Operador invalido");
+        if (isEmpty()) throw new IndexOutOfBoundsException("Lista vazia");
+        int atual = head;
+        while (atual != -1) {
+            elements[atual].value = op.apply(elements[atual].value);
+            atual = elements[atual].next_index;
+        }
+    }
+
+    int reduce(BinaryOperator<Integer> op, int dfault){
+        if (isEmpty()) return dfault;
+        int atual=head;
+        int total=op.apply(elements[atual].value, dfault);
+        while (elements[atual].next_index!=-1){
+            atual=elements[atual].next_index;
+            total=op.apply(total, elements[atual].value);
+        }
+        return total;
+    }
     public static void main(String[] args) {
         FintList teste = new FintList();
         teste.add(1);
