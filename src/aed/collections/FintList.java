@@ -215,6 +215,7 @@ public class FintList implements Iterable<Integer> {
             c.accept(elements[atual].value);
         }
     }
+    //lol
 
     public static void main(String[] args) {
         FintList teste = new FintList();
