@@ -5,6 +5,36 @@ import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
+public static void main(String[] args) {
+    FintList teste = new FintList();
+    teste.add(1);
+    teste.add(2);
+    teste.add(3);
+    teste.add(4);
+    teste.add(5);
+    teste.add(6);
+    teste.add(7);
+    teste.add(8);
+    teste.add(9);
+    teste.add(10);
+    teste.remove();
+    teste.remove();
+    teste.remove();
+    teste.remove();
+    teste.remove();
+    teste.remove();
+    teste.remove();
+    teste.remove();
+
+    System.out.println("Capacity: " + teste.capacity);
+
+    for (int v : teste)
+        System.out.println(v);
+
+    System.out.println("head: " + teste.elements[teste.head].value);
+    System.out.println("tail: " + teste.elements[teste.tail].value);
+}
+
 public class FintList implements Iterable<Integer> {
     private static final int INITIAL_CAPACITY = 10;
 
@@ -13,7 +43,16 @@ public class FintList implements Iterable<Integer> {
     private int head; //Primeiro elemento da lista
     private int tail; //Ultimo elemento da lista
     private int capacity; //Tamanho total da lista
-    private int removedNodes;
+    private int removedNodes; //Quantidade de "lixo" na lista
+
+    public FintList() {
+        this.capacity = INITIAL_CAPACITY;
+        this.elements = new IntNode[capacity];
+        this.free_index = 0;
+        this.tail = -1;
+        this.head = -1;
+        this.removedNodes = 0;
+    }
 
     @Override
     public Iterator<Integer> iterator() {
@@ -33,57 +72,8 @@ public class FintList implements Iterable<Integer> {
         }
     }
 
-    public class FintListIterator implements Iterator<Integer> {
-
-        int nextNodeIndex;
-
-        public FintListIterator() {
-            this.nextNodeIndex = head;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return nextNodeIndex != -1;
-        }
-
-        @Override
-        public Integer next() {
-            IntNode result = elements[nextNodeIndex];
-            nextNodeIndex = result.next_index;
-            return result.value;
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException("Iterator doesn’t support removal");
-        }
-    }
-
-    private static class IntNode { //Classe
-        int value;
-        int next_index;
-        int prev_index;
-
-        IntNode(int value, int next_index, int prev_index) {
-            this.value = value;
-            this.next_index = next_index;
-            this.prev_index = prev_index;
-        }
-    }
-
-    public FintList() {
-        this.capacity = INITIAL_CAPACITY;
-        this.elements = new IntNode[capacity];
-        this.free_index = 0;
-        this.tail = -1;
-        this.head = -1;
-        this.removedNodes = 0;
-    }
-
     private void resize(int new_capacity) {
         IntNode[] new_array = new IntNode[new_capacity]; //Novo array para o elements
-
-        System.out.println("Resized");
 
         if (new_capacity < capacity) { //Caso estejamos diminuindo o array
             int atual = -1;
@@ -179,7 +169,7 @@ public class FintList implements Iterable<Integer> {
         removedNodes++;
 
         if (removedNodes > (capacity * 0.75)) { //Caso mais de 3/4 do array for lixo
-            resize(capacity >> 1); //Diminui para metade da capacidade
+            resize(Math.max(capacity >> 1, INITIAL_CAPACITY)); //Diminui para metade da capacidade
         }
 
         return node.value;
@@ -270,12 +260,12 @@ public class FintList implements Iterable<Integer> {
         }
         return elements[tail].value;
     }
+
     int indexOf(int item) {
         int atual = head;
         while (atual != -1 && elements[atual].value != item) {
             atual = elements[atual].next_index;
         }
-        if (atual == -1) return -1;
         return atual;
     }
 
@@ -293,43 +283,52 @@ public class FintList implements Iterable<Integer> {
         }
     }
 
-    int reduce(BinaryOperator<Integer> op, int dfault){
+    int reduce(BinaryOperator<Integer> op, int dfault) {
         if (isEmpty()) return dfault;
-        int atual=head;
-        int total=op.apply(elements[atual].value, dfault);
-        while (elements[atual].next_index!=-1){
-            atual=elements[atual].next_index;
-            total=op.apply(total, elements[atual].value);
+        int atual = head;
+        int total = op.apply(elements[atual].value, dfault);
+        while (elements[atual].next_index != -1) {
+            atual = elements[atual].next_index;
+            total = op.apply(total, elements[atual].value);
         }
         return total;
     }
-    public static void main(String[] args) {
-        FintList teste = new FintList();
-        teste.add(1);
-        teste.add(2);
-        teste.add(3);
-        teste.add(4);
-        teste.add(5);
-        teste.add(6);
-        teste.add(7);
-        teste.add(8);
-        teste.add(9);
-        teste.add(10);
-        teste.remove();
-        teste.remove();
-        teste.remove();
-        teste.remove();
-        teste.remove();
-        teste.remove();
-        teste.remove();
-        teste.remove();
 
-        System.out.println("Capacity: " + teste.capacity);
+    private static class IntNode { //Classe
+        int value;
+        int next_index;
+        int prev_index;
 
-        for (int v : teste)
-            System.out.println(v);
+        IntNode(int value, int next_index, int prev_index) {
+            this.value = value;
+            this.next_index = next_index;
+            this.prev_index = prev_index;
+        }
+    }
 
-        System.out.println("head: " + teste.elements[teste.head].value);
-        System.out.println("tail: " + teste.elements[teste.tail].value);
+    public class FintListIterator implements Iterator<Integer> {
+
+        int nextNodeIndex;
+
+        public FintListIterator() {
+            this.nextNodeIndex = head;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return nextNodeIndex != -1;
+        }
+
+        @Override
+        public Integer next() {
+            IntNode result = elements[nextNodeIndex];
+            nextNodeIndex = result.next_index;
+            return result.value;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("Iterator doesn’t support removal");
+        }
     }
 }
