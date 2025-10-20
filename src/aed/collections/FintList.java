@@ -5,36 +5,6 @@ import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
-public static void main(String[] args) {
-    FintList teste = new FintList();
-    teste.add(1);
-    teste.add(2);
-    teste.add(3);
-    teste.add(4);
-    teste.add(5);
-    teste.add(6);
-    teste.add(7);
-    teste.add(8);
-    teste.add(9);
-    teste.add(10);
-    teste.remove();
-    teste.remove();
-    teste.remove();
-    teste.remove();
-    teste.remove();
-    teste.remove();
-    teste.remove();
-    teste.remove();
-
-    System.out.println("Capacity: " + teste.capacity);
-
-    for (int v : teste)
-        System.out.println(v);
-
-    System.out.println("head: " + teste.elements[teste.head].value);
-    System.out.println("tail: " + teste.elements[teste.tail].value);
-}
-
 public class FintList implements Iterable<Integer> {
     private static final int INITIAL_CAPACITY = 10;
 
@@ -52,6 +22,36 @@ public class FintList implements Iterable<Integer> {
         this.tail = -1;
         this.head = -1;
         this.removedNodes = 0;
+    }
+
+    public static void main(String[] args) {
+        FintList teste = new FintList();
+        teste.add(1);
+        teste.add(2);
+        teste.add(3);
+        teste.add(4);
+        teste.add(5);
+        teste.add(6);
+        teste.add(7);
+        teste.add(8);
+        teste.add(9);
+        teste.add(10);
+        teste.remove();
+        teste.remove();
+        teste.remove();
+        teste.remove();
+        teste.remove();
+        teste.remove();
+        teste.remove();
+        teste.remove();
+
+        System.out.println("Capacity: " + teste.capacity);
+
+        for (int v : teste)
+            System.out.println(v);
+
+        System.out.println("head: " + teste.elements[teste.head].value);
+        System.out.println("tail: " + teste.elements[teste.tail].value);
     }
 
     @Override
@@ -143,12 +143,19 @@ public class FintList implements Iterable<Integer> {
         return true;
     }
 
+    private void trashCollector() {
+        if (removedNodes > (capacity * 0.75)) { //Caso mais de 3/4 do array for lixo
+            resize(Math.max(capacity >> 1, INITIAL_CAPACITY)); //Diminui para metade da capacidade
+        }
+    }
+
     int remove() {
-        if (head == -1)
+        if (isEmpty())
             throw new IndexOutOfBoundsException("Lista vazia");
         IntNode node = elements[tail]; //Guarda o no para ‘posteriori’
-        if (node.prev_index == -1) {
-            //Lógica do free_index para subtituição no add
+
+        if (node.prev_index == -1) { //Caso esteja a remover o head
+            //Lógica do free_index para substituição no add
             elements[tail].next_index = free_index;
             free_index = tail;
             //---
@@ -158,7 +165,8 @@ public class FintList implements Iterable<Integer> {
         } else {
             elements[elements[tail].prev_index].next_index = -1; //O no que apontava para a cauda para de apontar para qualquer no
 
-            //Lógica do free_index para subtituição no add
+            //Lógica do free_index para substituição no add
+            elements[tail].prev_index = -1;
             elements[tail].next_index = free_index;
             free_index = tail;
             //---
@@ -168,11 +176,40 @@ public class FintList implements Iterable<Integer> {
 
         removedNodes++;
 
-        if (removedNodes > (capacity * 0.75)) { //Caso mais de 3/4 do array for lixo
-            resize(Math.max(capacity >> 1, INITIAL_CAPACITY)); //Diminui para metade da capacidade
-        }
+        trashCollector();
 
         return node.value;
+    }
+
+    int removeAt(int index) {
+        int atual = getNodeIndex(index);
+
+        if (atual == tail)
+            return remove();
+
+        int result = elements[atual].value;
+
+        elements[elements[atual].next_index].prev_index = elements[atual].prev_index; //O no seguinte passa a apontar para o no anterior do atual
+        if (elements[atual].prev_index != -1)
+            elements[elements[atual].prev_index].next_index = elements[atual].next_index; //O no anterior passa a apontar para o proximo do atual
+        else //Está a tentar retirar a cabeça
+            head = elements[atual].next_index;
+
+        //Lógica do free_index para substituição no add
+        elements[atual].prev_index = -1;
+        elements[atual].next_index = free_index;
+        free_index = atual;
+        //---
+
+        removedNodes++;
+
+        trashCollector();
+
+        return result;
+    }
+
+    boolean remove(int item) {
+
     }
 
     void addAt(int index, int item) {
@@ -229,11 +266,11 @@ public class FintList implements Iterable<Integer> {
         return head == -1;
     }
 
-    int get(int index) {
+    private int getNodeIndex(int index) {
         if (index < 0) { //verifica se o indice é valido
             throw new IndexOutOfBoundsException("Indice invalido");
         }
-        if (isEmpty()) { //veirifica se a lista esta vazia
+        if (isEmpty()) { //verifica se a lista esta vazia
             throw new IndexOutOfBoundsException("Lista vazia");
         }
 
@@ -244,6 +281,11 @@ public class FintList implements Iterable<Integer> {
                 throw new IndexOutOfBoundsException("Indice maior que a lista ligada");
         }
 
+        return atual;
+    }
+
+    int get(int index) {
+        int atual = getNodeIndex(index);
         return elements[atual].value;
     }
 
