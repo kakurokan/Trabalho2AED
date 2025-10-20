@@ -19,7 +19,15 @@ public class FintList implements Iterable<Integer> {
 
     @Override
     public void forEach(Consumer<? super Integer> action) {
-        Iterable.super.forEach(action);
+        if (!isEmpty()) {
+            int atual = head;
+
+            while (atual != -1) {
+                IntNode atualNode = elements[atual];
+                action.accept(atualNode.value);
+                atual = atualNode.next_index;
+            }
+        }
     }
 
     public class FintListIterator implements Iterator<Integer> {
@@ -59,7 +67,6 @@ public class FintList implements Iterable<Integer> {
             this.prev_index = prev_index;
         }
     }
-
 
     public FintList() {
         this.capacity = INITIAL_CAPACITY;
@@ -158,57 +165,62 @@ public class FintList implements Iterable<Integer> {
         if (index != tail)
             tail = tail_temp;
 
-    }    void set(int index,int value) {
-        int atual=head;
+    }
+
+    void set(int index, int value) {
+        int atual = head;
         for (int i = 0; i < index; i++) {
-            if (atual==-1) throw new IndexOutOfBoundsException("Index invalid");
+            if (atual == -1) throw new IndexOutOfBoundsException("Index invalid");
             atual = elements[atual].next_index;
         }
         elements[atual].value = value;
     }
-    int size(){
+
+    int size() {
         if (head == -1) return 0;
-        int atual=head;
-        int size=0;
-        while (atual!=-1){
-            atual=elements[atual].next_index;
+        int atual = head;
+        int size = 0;
+        while (atual != -1) {
+            atual = elements[atual].next_index;
             size++;
         }
         return size;
     }
-    boolean isEmpty(){
-        if (head == free_index) return true;
-        return false;
+
+    boolean isEmpty() {
+        return head == -1;
     }
+
     int get(int index) {
-        if (index < 0 || index >= size()) { //verifica se o indice é valido
+        if (index < 0) { //verifica se o indice é valido
             throw new IndexOutOfBoundsException("Indice invalido");
         }
         if (isEmpty()) { //veirifica se a lista esta vazia
             throw new IndexOutOfBoundsException("Lista vazia");
         }
-        int atual = head;
-        for (int i = 1; i <= index; i++) { //percorre a lista ate o indice desejado
-            atual = elements[atual].next_index;
 
+        int atual = head;
+        for (int i = 1; i <= index; i++) { // percorre a lista até elemento anterior do index desejado
+            atual = elements[atual].next_index;
+            if (atual == -1)
+                throw new IndexOutOfBoundsException("Indice maior que a lista ligada");
         }
+
         return elements[atual].value;
     }
 
     int getFirst() {
-        if (isEmpty()) {throw new IndexOutOfBoundsException("Lista vazia");}
+        if (isEmpty()) {
+            throw new IndexOutOfBoundsException("Lista vazia");
+        }
         return elements[head].value;
     }
-    int get(){
-        if (isEmpty()) {throw new IndexOutOfBoundsException("Lista vazia");}
-        return elements[tail].value;
-    }
-    void forEach(Consumer<Integer> c) {
-        int atual=head;
-        if (atual==-1){throw new IndexOutOfBoundsException("Lista vazia")}
-        while (atual!=-1) {
-            c.accept(elements[atual].value);
+
+    int get() {
+        if (isEmpty()) {
+            throw new IndexOutOfBoundsException("Lista vazia");
         }
+        return elements[tail].value;
     }
 
     public static void main(String[] args) {
