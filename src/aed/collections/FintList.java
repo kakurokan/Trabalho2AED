@@ -16,11 +16,11 @@ public class FintList implements Iterable<Integer> {
     public Iterator<Integer> iterator() {
         return new FintListIterator();
     }
+
     @Override
     public void forEach(Consumer<? super Integer> action) {
         Iterable.super.forEach(action);
     }
-
 
     public class FintListIterator implements Iterator<Integer> {
 
@@ -46,7 +46,6 @@ public class FintList implements Iterable<Integer> {
         public void remove() {
             throw new UnsupportedOperationException("Iterator doesn’t support removal");
         }
-
     }
 
     private static class IntNode { //Classe
@@ -115,6 +114,7 @@ public class FintList implements Iterable<Integer> {
             elements[tail].next_index = free_index;
             free_index = tail;
             //---
+
             head = -1;
             tail = -1;
         } else {
@@ -158,64 +158,28 @@ public class FintList implements Iterable<Integer> {
         if (index != tail)
             tail = tail_temp;
 
-    }
-
-    void set(int index, int value) {
-        int atual = head;
+    }    void set(int index,int value) {
+        int atual=head;
         for (int i = 0; i < index; i++) {
-            if (atual == -1) throw new IndexOutOfBoundsException("Index invalid");
+            if (atual==-1) throw new IndexOutOfBoundsException("Index invalid");
             atual = elements[atual].next_index;
         }
         elements[atual].value = value;
     }
-
-    int size() {
+    int size(){
         if (head == -1) return 0;
-        int atual = head;
-        int size = 0;
-        while (atual != -1) {
-            atual = elements[atual].next_index;
+        int atual=head;
+        int size=0;
+        while (atual!=-1){
+            atual=elements[atual].next_index;
             size++;
         }
         return size;
     }
-
-    boolean isEmpty() {
-        if (head == -1) return true;
+    boolean isEmpty(){
+        if (head == free_index) return true;
         return false;
     }
-
-    int get(int index) {
-        if (index < 0 || index >= size()) { //verifica se o indice é valido
-            throw new IndexOutOfBoundsException("Indice invalido");
-        }
-        if (isEmpty()) { //veirifica se a lista esta vazia
-            throw new IndexOutOfBoundsException("Lista vazia");
-        }
-        int atual = head;
-        for (int i = 1; i <= index; i++) { //percorre a lista ate o indice desejado
-            atual = elements[atual].next_index;
-
-        }
-        return elements[atual].value;
-    }
-
-    int getFirst() {
-        if (isEmpty()) {throw new IndexOutOfBoundsException("Lista vazia");}
-        return elements[head].value;
-    }
-    int get(){
-        if (isEmpty()) {throw new IndexOutOfBoundsException("Lista vazia");}
-        return elements[tail].value;
-    }
-    void forEach(Consumer<Integer> c) {
-        int atual=head;
-        if (atual==-1){throw new IndexOutOfBoundsException("Lista vazia")}
-        while (atual!=-1) {
-            c.accept(elements[atual].value);
-        }
-    }
-    //lol
 
     public static void main(String[] args) {
         FintList teste = new FintList();
@@ -224,12 +188,24 @@ public class FintList implements Iterable<Integer> {
         teste.add(3);
         teste.add(4);
         teste.add(5);
-        teste.addAt(5, 87);
-        teste.add(6);
+        teste.add(10);
+        System.out.println(teste.remove());
+        System.out.println(teste.remove());
+        System.out.println(teste.remove());
+        teste.add(47);
+        teste.add(39);
         System.out.println("Elementos: ");
         for (int v : teste)
             System.out.println(v);
 
+        teste.addAt(5, 87);
 
+        //teste.addAt(3, 89);
+        //teste.addAt(0, 87);
+        System.out.println("Elementos: ");
+        for (int v : teste)
+            System.out.println(v);
+        System.out.println("head: " + teste.elements[teste.head].value);
+        System.out.println("tail: " + teste.elements[teste.tail].value);
     }
 }
