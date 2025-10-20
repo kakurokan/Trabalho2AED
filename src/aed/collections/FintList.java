@@ -196,7 +196,7 @@ public class FintList implements Iterable<Integer> {
     }
 
     boolean isEmpty() {
-        return head == free_index;
+        return head == -1;
     }
 
     public static void main(String[] args) {
