@@ -11,6 +11,7 @@ public class FintList implements Iterable<Integer> {
     private int head; //Primeiro elemento da lista
     private int tail; //Ultimo elemento da lista
     private int capacity; //Tamanho total da lista
+    private int removedNodes;
 
     @Override
     public Iterator<Integer> iterator() {
@@ -74,10 +75,14 @@ public class FintList implements Iterable<Integer> {
         this.free_index = 0;
         this.tail = -1;
         this.head = -1;
+        this.removedNodes = 0;
     }
 
-    private void resize() {
-        
+    private void resize(int new_capacity) {
+        IntNode[] new_array = new IntNode[new_capacity];
+        System.arraycopy(elements, 0, new_array, 0, capacity);
+        elements = new_array;
+        capacity = new_capacity;
     }
 
     boolean add(int item) {
@@ -91,6 +96,10 @@ public class FintList implements Iterable<Integer> {
             System.out.println("Esta é a " + free_index + " e adicionou " + item);
             free_index++;
         } else {
+
+            if (free_index >= capacity)
+                resize(capacity << 1); //Dobra o tamanho quase o array não seja o suficiente
+
             IntNode newNode = new IntNode(item, -1, tail);
 
             int next_free_index = free_index;
@@ -109,6 +118,7 @@ public class FintList implements Iterable<Integer> {
                 free_index++;
         }
 
+        System.out.println("Free index: " + free_index);
         return true;
     }
 
@@ -134,6 +144,8 @@ public class FintList implements Iterable<Integer> {
 
             tail = node.prev_index; //Muda a cauda para o no anterior
         }
+
+        removedNodes++;
         return node.value;
     }
 
@@ -241,7 +253,14 @@ public class FintList implements Iterable<Integer> {
             System.out.println(v);
 
         teste.addAt(5, 87);
-
+        teste.add(90);
+        teste.add(90);
+        teste.add(90);
+        teste.add(90);
+        teste.add(90);
+        teste.add(90);
+        System.out.printf("capacity: " + teste.capacity);
+        teste.addAt(19, 44);
         //teste.addAt(3, 89);
         //teste.addAt(0, 87);
         System.out.println("Elementos: ");
