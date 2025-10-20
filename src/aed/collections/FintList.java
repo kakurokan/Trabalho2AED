@@ -76,8 +76,8 @@ public class FintList implements Iterable<Integer> {
         this.head = -1;
     }
 
-    private void resize(int new_capacity) {
-
+    private void resize() {
+        
     }
 
     boolean add(int item) {
