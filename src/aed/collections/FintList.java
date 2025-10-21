@@ -23,6 +23,7 @@ public class FintList implements Iterable<Integer> {
         this.tail = -1;
         this.head = -1;
         this.removedNodes = 0;
+        this.size = 0;
     }
 
     public static void main(String[] args) {
@@ -45,10 +46,10 @@ public class FintList implements Iterable<Integer> {
 
         for (int v : teste)
             System.out.print(v);
-        System.out.println("\n");
-        teste.reverse();
-        System.out.println("Reversed: ");
-        for (int v : teste) {
+        System.out.println();
+
+        FintList teste1 = teste.deepCopy();
+        for (int v : teste1) {
             System.out.print(v);
         }
     }
@@ -114,7 +115,6 @@ public class FintList implements Iterable<Integer> {
             this.tail = this.free_index;
 
             elements[this.free_index] = new IntNode(item, -1, -1);
-            System.out.println("Esta é a " + free_index + " e adicionou " + item);
             free_index++;
         } else {
 
@@ -130,9 +130,6 @@ public class FintList implements Iterable<Integer> {
             elements[free_index] = newNode;
             elements[tail].next_index = free_index;
             tail = free_index;
-            System.out.println("Tail: " + tail);
-
-            System.out.println("Esta é a " + free_index + " e adicionou " + newNode.value);
 
             if (next_free_index != free_index)
                 free_index = next_free_index;
@@ -140,7 +137,6 @@ public class FintList implements Iterable<Integer> {
                 free_index++;
         }
 
-        System.out.println("Free index: " + free_index);
         size++;
         return true;
     }
@@ -234,7 +230,6 @@ public class FintList implements Iterable<Integer> {
 
         int tail_temp = this.tail;
         tail = atual;
-        System.out.println("atual: " + atual + " tail: " + tail);
         int next = elements[atual].next_index;
 
         add(item); //adiciona o elemento a lista
@@ -356,6 +351,21 @@ public class FintList implements Iterable<Integer> {
             }
             elements[atual].next_index = elements[atual].prev_index; //cria o novo head
         }
+    }
+
+    FintList deepCopy() {
+        FintList newList = new FintList();
+
+        if (isEmpty()) //Caso esteja vazio, retorna uma lista vazia
+            return newList;
+
+        int atual = head;
+        while (atual != -1) {
+            newList.add(elements[atual].value);
+            atual = elements[atual].next_index;
+        }
+
+        return newList;
     }
 
     private static class IntNode { //Classe
