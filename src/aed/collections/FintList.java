@@ -1,6 +1,9 @@
 package aed.collections;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.Iterator;
+import java.util.Scanner;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
@@ -26,25 +29,61 @@ public class FintList implements Iterable<Integer> {
         this.size = 0;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException, FileNotFoundException {
         FintList teste = new FintList();
-        teste.addAt(0, 1);
-        teste.add(2);
-        teste.add(3);
-        teste.printList();
-        teste.remove();
-        teste.printList();
-        teste.addAt(1, 30);
-        teste.printList();
-        teste.add(3);
-        teste.add(4);
-        teste.printList();
-        teste.addAt(4, 68);
-        teste.addAt(6, 6);
-        teste.remove(68);
-        teste.printList();
+        Scanner sc = new Scanner(new FileReader("src/aed/collections/botclack.txt"));
+        String linha;
+        String[] partes;
+        FintList teste_deep=new FintList();
+        int a, b;
+        while (sc.hasNextLine()) {
+            linha = sc.nextLine();
+            partes = linha.split(" ");
+            if (linha.contains("addAt")) {
+                a = Integer.parseInt(partes[1]);
+                b = Integer.parseInt(partes[2]);
+                teste.addAt(a, b);
+            } else if (linha.contains("add")) {
+                a=Integer.parseInt(partes[1]);
+                teste.add(a);
+            } else if (linha.contains("get") && partes.length == 1) {
+                teste.get();
+            } else if (linha.contains("get")) {
+                a = Integer.parseInt(partes[1]);
+                teste.get(a);
+            } else if (linha.contains("getFirst")) {
+                teste.getFirst();
+            } else if (linha.contains("set")) {
+                a=Integer.parseInt(partes[1]);
+                b=Integer.parseInt(partes[2]);
+                teste.set(a,b);
+            } else if (linha.contains("isEmpty")) {
+                teste.isEmpty();
+            }else if (linha.contains("remove")&& partes.length == 1) {
+                teste.remove();
+            }else if (linha.contains("remove")) {
+                a=sc.nextInt();
+                teste.remove(a);
+            }else if (linha.contains("removeAt")) {
+                a=Integer.parseInt(partes[1]);
+                teste.removeAt(a);
+            }else if (linha.contains("contains")) {
+                a=Integer.parseInt(partes[1]);
+                teste.contains(a);
+            } else if (linha.contains("indexOf")) {
+                a=Integer.parseInt(partes[1]);
+                teste.indexOf(a);
+            }else if (linha.contains("reverse")) {
+                teste.reverse();
+            }else if (linha.contains("deepCopy")) {
+                teste_deep=teste.deepCopy();
+            }
+        }
+        System.out.println("Elementos: ");
+        for (int v: teste){
+            System.out.print(v);
+        }
     }
-
 
     @Override
     public Iterator<Integer> iterator() {
@@ -204,7 +243,7 @@ public class FintList implements Iterable<Integer> {
 
     public boolean remove(int item) {
         int index = indexOf(item);
-        
+
         if (index == -1)
             return false;
         removeAt(index);
