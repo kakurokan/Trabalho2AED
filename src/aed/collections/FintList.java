@@ -401,7 +401,6 @@ public class FintList implements Iterable<Integer> {
         return total;
     }
 
-
     public void reverse() {
         if (isEmpty()) throw new IndexOutOfBoundsException("Lista vazia");
         if (!(elements[head].next_index == -1)) {
