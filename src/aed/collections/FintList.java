@@ -40,18 +40,11 @@ public class FintList implements Iterable<Integer> {
         teste.remove();
         teste.remove();
         teste.remove();
+        teste.printList();
+        teste.addAt(3, 90);
+        teste.addAt(5, 87);
 
-        System.out.println("Elementos: ");
-        System.out.println("Size: " + teste.size());
-
-        for (int v : teste)
-            System.out.print(v);
-        System.out.println();
-
-        FintList teste1 = teste.deepCopy();
-        for (int v : teste1) {
-            System.out.print(v);
-        }
+        teste.printList();
     }
 
 
@@ -270,14 +263,21 @@ public class FintList implements Iterable<Integer> {
         if (isEmpty()) { //verifica se a lista esta vazia
             throw new IndexOutOfBoundsException("Lista vazia");
         }
+        if (index > size)
+            throw new IndexOutOfBoundsException("Índice maior que a lista ligada");
 
         int atual;
 
-        atual = head;
-        for (int i = 1; i <= index; i++) { // percorre a lista até elemento anterior do index desejado
-            atual = elements[atual].next_index;
-            if (atual == -1)
-                throw new IndexOutOfBoundsException("Índice maior que a lista ligada");
+        if (index < (size >> 1)) {
+            atual = head;
+            for (int i = 0; i < index; i++) { // percorre a lista até elemento anterior do index desejado
+                atual = elements[atual].next_index;
+            }
+        } else {
+            atual = tail;
+            for (int i = size - 1; i > index; i--) { // percorre a lista até elemento anterior do index desejado
+                atual = elements[atual].prev_index;
+            }
         }
 
         return atual;
@@ -361,13 +361,17 @@ public class FintList implements Iterable<Integer> {
         if (isEmpty()) //Caso esteja vazio, retorna uma lista vazia
             return newList;
 
-        int atual = head;
-        while (atual != -1) {
-            newList.add(elements[atual].value);
-            atual = elements[atual].next_index;
-        }
+        for (int v : this)
+            newList.add(v);
 
         return newList;
+    }
+
+    private void printList() {
+        System.out.print("Elementos: ");
+        for (int v : this)
+            System.out.print(v + "->");
+        System.out.println();
     }
 
     private static class IntNode { //Classe
