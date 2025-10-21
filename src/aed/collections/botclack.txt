@@ -1,10 +1,4 @@
-add 5
-add 5
-add 5
-add 5
-add 5
-add 5
-add 5
+add 0
 add 1
 add 2
 add 3
@@ -13,20 +7,29 @@ add 5
 add 6
 add 7
 add 8
-addAt 5 6
-addAt 7 6
-addAt 10 40
-get 10
-size
-addAt 18 20
+add 9
+add 10
+add 11
+add 12
+add 13
+add 14
+add 15
+add 16
+add 17
+add 18
+add 19
 add 20
-add 50
+add 21
 print
 reverse
 print
 reverse
 print
-add 30
-add 50
-add 60
-add 30
+reverse
+print
+deepCopy
+reverse
+deepCopy
+reverse
+
+

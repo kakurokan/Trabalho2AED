@@ -34,7 +34,7 @@ public class FintList implements Iterable<Integer> {
         Scanner sc = new Scanner(new FileReader("src/aed/collections/botclack.txt"));
         String linha;
         String[] partes;
-        FintList teste_deep=new FintList();
+        FintList teste_deep = new FintList();
         int a, b;
         while (sc.hasNextLine()) {
             linha = sc.nextLine();
@@ -44,47 +44,44 @@ public class FintList implements Iterable<Integer> {
                 b = Integer.parseInt(partes[2]);
                 teste.addAt(a, b);
             } else if (linha.contains("add")) {
-                a=Integer.parseInt(partes[1]);
+                a = Integer.parseInt(partes[1]);
                 teste.add(a);
             } else if (linha.contains("get") && partes.length == 1) {
                 teste.get();
             } else if (linha.contains("get")) {
                 a = Integer.parseInt(partes[1]);
-                System.out.println(teste.get(a));
+                teste.get(a);
             } else if (linha.contains("getFirst")) {
                 teste.getFirst();
             } else if (linha.contains("set")) {
-                a=Integer.parseInt(partes[1]);
-                b=Integer.parseInt(partes[2]);
-                teste.set(a,b);
+                a = Integer.parseInt(partes[1]);
+                b = Integer.parseInt(partes[2]);
+                teste.set(a, b);
             } else if (linha.contains("isEmpty")) {
                 teste.isEmpty();
-            }else if (linha.contains("remove")&& partes.length == 1) {
+            } else if (linha.contains("remove") && partes.length == 1) {
                 teste.remove();
-            }else if (linha.contains("remove")) {
-                a=sc.nextInt();
+            } else if (linha.contains("remove")) {
+                a = sc.nextInt();
                 teste.remove(a);
-            }else if (linha.contains("removeAt")) {
-                a=Integer.parseInt(partes[1]);
+            } else if (linha.contains("removeAt")) {
+                a = Integer.parseInt(partes[1]);
                 teste.removeAt(a);
-            }else if (linha.contains("contains")) {
-                a=Integer.parseInt(partes[1]);
+            } else if (linha.contains("contains")) {
+                a = Integer.parseInt(partes[1]);
                 teste.contains(a);
             } else if (linha.contains("indexOf")) {
-                a=Integer.parseInt(partes[1]);
+                a = Integer.parseInt(partes[1]);
                 teste.indexOf(a);
-            }else if (linha.contains("reverse")) {
+            } else if (linha.contains("reverse")) {
                 teste.reverse();
-            }else if (linha.contains("deepCopy")) {
-                teste_deep=teste.deepCopy();
-            } else if (linha.contains("size")) {
-                System.out.println(teste.size());
-            } else if (linha.contains("print")) {
+            } else if (linha.contains("deepCopy")) {
+                teste_deep = teste.deepCopy();
+                teste_deep.printList();
+            }else if(linha.contains("print")){
                 teste.printList();
             }
         }
-
-
     }
 
     @Override
@@ -320,7 +317,7 @@ public class FintList implements Iterable<Integer> {
     }
 
     private int getNodeIndex(int index) {
-        if (index < 0 || index > size) { //verifica se o indice é valido
+        if (index < 0 || index >= size) { //verifica se o indice é valido
             throw new IndexOutOfBoundsException("Índice invalido");
         }
         if (isEmpty()) { //verifica se a lista esta vazia
@@ -392,35 +389,35 @@ public class FintList implements Iterable<Integer> {
 
     public int reduce(BinaryOperator<Integer> op, int dfault) {
         if (isEmpty()) return dfault;
+
         int atual = head;
-        int total = op.apply(elements[atual].value, dfault);
-        while (elements[atual].next_index != -1) {
-            atual = elements[atual].next_index;
+        int total = dfault;
+
+        while (atual != -1) {
             total = op.apply(total, elements[atual].value);
+            atual = elements[atual].next_index;
         }
+
         return total;
     }
+
 
     public void reverse() {
         if (isEmpty()) throw new IndexOutOfBoundsException("Lista vazia");
         if (!(elements[head].next_index == -1)) {
-            int atual = tail;
-            tail = head; //troca o índice do tail com o do head e vise versa
-            head = atual;
-            int temp_index = 0;
-            System.out.println("valor do prev"+elements[atual].prev_index);
-            elements[atual].next_index = elements[atual].prev_index; //o tail passa a ser o head;
-            elements[atual].prev_index = -1;
-            atual = elements[atual].next_index; //o next passou a ser o prev, assim o atual iguala o elemento anterior ao tail;
-            while (elements[atual].prev_index != -1) {
-                temp_index = elements[atual].next_index;
-                elements[atual].next_index = elements[atual].prev_index; // o next passa a ser igual ao prev index
-                elements[atual].prev_index = temp_index; //o prev passa a ser igual ao next
-                atual = elements[atual].next_index;
+            int atual=head,next,prev=-1;
+            while (atual!=-1){
+                next=elements[atual].next_index;  //guarda o next para depois alterar o prev
+                elements[atual].next_index=prev;
+                elements[atual].prev_index=next; //inverte o prev para ser o next e vise versa
+                prev=atual;
+                atual=next;
             }
-            elements[atual].prev_index =temp_index; //cria o novo tail;
-            elements[atual].next_index=-1;
+            atual=head; //inverte o tail e o head
+            head=tail;
+            tail=atual;
         }
+
     }
 
     public FintList deepCopy() {
@@ -431,7 +428,6 @@ public class FintList implements Iterable<Integer> {
 
         for (int v : this)
             newList.add(v);
-
         return newList;
     }
 
