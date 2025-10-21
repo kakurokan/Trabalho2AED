@@ -204,6 +204,9 @@ public class FintList implements Iterable<Integer> {
 
     public boolean remove(int item) {
         int index = indexOf(item);
+        
+        if (index == -1)
+            return false;
         removeAt(index);
 
         return true;
