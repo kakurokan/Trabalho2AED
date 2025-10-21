@@ -40,6 +40,8 @@ public class FintList implements Iterable<Integer> {
         teste.add(4);
         teste.printList();
         teste.addAt(4, 68);
+        teste.addAt(6, 6);
+        teste.remove(68);
         teste.printList();
     }
 
@@ -213,6 +215,12 @@ public class FintList implements Iterable<Integer> {
         }
         if (isEmpty() && index != 0)
             throw new IndexOutOfBoundsException("Lista vazia");
+        if (index == size) {
+            if (add(item))
+                return;
+            else
+                throw new IndexOutOfBoundsException("Índice inválido");
+        }
 
         if (free_index >= capacity)
             resize(capacity << 1); //Dobra o tamanho quase o array não seja o suficiente
@@ -274,8 +282,6 @@ public class FintList implements Iterable<Integer> {
         if (isEmpty()) { //verifica se a lista esta vazia
             return -1;
         }
-        if (index > size)
-            throw new IndexOutOfBoundsException("Índice maior que a lista ligada");
 
         int atual;
 
@@ -316,11 +322,14 @@ public class FintList implements Iterable<Integer> {
     }
 
     public int indexOf(int item) {
-        int atual = head;
-        while (atual != -1 && elements[atual].value != item) {
+        int index = 0, atual = head;
+        while (atual != -1) {
+            if (elements[atual].value == item)
+                return index;
             atual = elements[atual].next_index;
+            index++;
         }
-        return atual;
+        return -1;
     }
 
     public boolean contains(int item) {
