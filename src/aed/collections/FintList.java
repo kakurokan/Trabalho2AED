@@ -40,8 +40,9 @@ public class FintList implements Iterable<Integer> {
         teste.remove();
         teste.remove();
         teste.remove();
-        teste.printList();
         teste.addAt(3, 90);
+        teste.printList();
+        System.out.println("Size: " + teste.size());
         teste.addAt(5, 87);
 
         teste.printList();
@@ -202,7 +203,7 @@ public class FintList implements Iterable<Integer> {
     public boolean remove(int item) {
         int index = -1;
         try {
-            index = get(item); //Busca onde está este ‘item’ na lista ligada
+            index = indexOf(item); //Busca onde está este ‘item’ na lista ligada
         } catch (IndexOutOfBoundsException e) {
             if (e.getMessage().equals("Índice maior que a lista ligada")) //Caso não seja possível encontrar estre index
                 return false;
