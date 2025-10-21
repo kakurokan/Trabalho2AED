@@ -37,6 +37,7 @@ public class FintList implements Iterable<Integer> {
         teste.add(7);
         teste.add(8);
         teste.add(9);
+        teste.addAt(0, 24);
         teste.remove();
         teste.remove();
         teste.remove();
@@ -210,6 +211,8 @@ public class FintList implements Iterable<Integer> {
                 return false;
             throw new IndexOutOfBoundsException();
         }
+        elements[atual].next_index = free_index;
+        tail = free_index;
 
         removeAt(index);
 
@@ -220,25 +223,26 @@ public class FintList implements Iterable<Integer> {
         if (index < 0) {
             throw new IndexOutOfBoundsException("Índice invalido");
         }
+
+        if (free_index >= capacity)
+            resize(capacity << 1); //Dobra o tamanho quase o array não seja o suficiente
+
+        int next_free_index = free_index;
+        if (elements[free_index] != null) //Caso exista espaço lixo dentro do array
+            next_free_index = elements[free_index].next_index; //Guarda o proximo espaço lixo
+
         int atual = getNodeIndex(index); //Busca onde está o elemento
-        atual = elements[atual].prev_index; //Muda o ponteiro para o valor anterior
 
-        int tail_temp = this.tail;
-        tail = atual;
-        int next = elements[atual].next_index;
+        elements[free_index] = new IntNode(item, atual, elements[atual].prev_index);
 
-        add(item); //adiciona o elemento a lista
-
-        elements[tail].next_index = next; //Faz o elemento novo apontar para o elemento que estava no index anteriormente
-
-        if (next != -1)
-            elements[next].prev_index = tail;
-        else {
-            elements[tail].prev_index = tail_temp;
+        if (elements[free_index].prev_index == -1) {
+            head = free_index;
         }
-        if (index != tail)
-            tail = tail_temp;
 
+        if (next_free_index != free_index)
+            free_index = next_free_index;
+        else
+            free_index++;
     }
 
     public void set(int index, int value) {
