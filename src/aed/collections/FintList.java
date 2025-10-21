@@ -50,7 +50,7 @@ public class FintList implements Iterable<Integer> {
                 teste.get();
             } else if (linha.contains("get")) {
                 a = Integer.parseInt(partes[1]);
-                teste.get(a);
+                System.out.println(teste.get(a));
             } else if (linha.contains("getFirst")) {
                 teste.getFirst();
             } else if (linha.contains("set")) {
@@ -77,12 +77,14 @@ public class FintList implements Iterable<Integer> {
                 teste.reverse();
             }else if (linha.contains("deepCopy")) {
                 teste_deep=teste.deepCopy();
+            } else if (linha.contains("size")) {
+                System.out.println(teste.size());
+            } else if (linha.contains("print")) {
+                teste.printList();
             }
         }
-        System.out.println("Elementos: ");
-        for (int v: teste){
-            System.out.print(v);
-        }
+
+
     }
 
     @Override
@@ -405,7 +407,8 @@ public class FintList implements Iterable<Integer> {
             int atual = tail;
             tail = head; //troca o índice do tail com o do head e vise versa
             head = atual;
-            int temp_index;
+            int temp_index = 0;
+            System.out.println("valor do prev"+elements[atual].prev_index);
             elements[atual].next_index = elements[atual].prev_index; //o tail passa a ser o head;
             elements[atual].prev_index = -1;
             atual = elements[atual].next_index; //o next passou a ser o prev, assim o atual iguala o elemento anterior ao tail;
@@ -415,7 +418,8 @@ public class FintList implements Iterable<Integer> {
                 elements[atual].prev_index = temp_index; //o prev passa a ser igual ao next
                 atual = elements[atual].next_index;
             }
-            elements[atual].next_index = elements[atual].prev_index; //cria o novo head
+            elements[atual].prev_index =temp_index; //cria o novo tail;
+            elements[atual].next_index=-1;
         }
     }
 
