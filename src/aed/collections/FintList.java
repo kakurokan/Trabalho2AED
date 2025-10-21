@@ -237,12 +237,17 @@ public class FintList implements Iterable<Integer> {
 
         if (elements[free_index].prev_index == -1) {
             head = free_index;
+        } else {
+            elements[elements[atual].prev_index].next_index = free_index;
         }
+        elements[atual].prev_index = free_index;
 
         if (next_free_index != free_index)
             free_index = next_free_index;
         else
             free_index++;
+
+        removedNodes--;
     }
 
     public void set(int index, int value) {
