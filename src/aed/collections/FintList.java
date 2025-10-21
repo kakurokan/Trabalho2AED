@@ -355,8 +355,6 @@ public class FintList implements Iterable<Integer> {
                 atual = elements[atual].next_index;
             }
             elements[atual].next_index = elements[atual].prev_index; //cria o novo head
-            elements[atual].prev_index = -1;
-
         }
     }
 
