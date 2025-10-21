@@ -107,7 +107,7 @@ public class FintList implements Iterable<Integer> {
         }
     }
 
-    boolean add(int item) {
+    public boolean add(int item) {
         if (elements == null)
             return false;
         if (head == -1 && tail == -1) {
@@ -147,7 +147,7 @@ public class FintList implements Iterable<Integer> {
         }
     }
 
-    int remove() {
+    public int remove() {
         if (isEmpty())
             throw new IndexOutOfBoundsException("Lista vazia");
         IntNode node = elements[tail]; //Guarda o no para ‘posteriori’
@@ -179,7 +179,7 @@ public class FintList implements Iterable<Integer> {
         return node.value;
     }
 
-    int removeAt(int index) {
+    public int removeAt(int index) {
         int atual = getNodeIndex(index);
 
         if (atual == tail)
@@ -206,7 +206,7 @@ public class FintList implements Iterable<Integer> {
         return result;
     }
 
-    boolean remove(int item) {
+    public boolean remove(int item) {
         int index = -1;
         try {
             index = get(item); //Busca onde está este ‘item’ na lista ligada
@@ -221,7 +221,7 @@ public class FintList implements Iterable<Integer> {
         return true;
     }
 
-    void addAt(int index, int item) {
+    public void addAt(int index, int item) {
         if (index < 0) {
             throw new IndexOutOfBoundsException("Índice invalido");
         }
@@ -246,7 +246,7 @@ public class FintList implements Iterable<Integer> {
 
     }
 
-    void set(int index, int value) {
+    public void set(int index, int value) {
         int atual = head;
         for (int i = 0; i < index; i++) {
             if (atual == -1) throw new IndexOutOfBoundsException("Index invalid");
@@ -255,11 +255,11 @@ public class FintList implements Iterable<Integer> {
         elements[atual].value = value;
     }
 
-    int size() {
+    public int size() {
         return size;
     }
 
-    boolean isEmpty() {
+    public boolean isEmpty() {
         return head == -1;
     }
 
@@ -271,7 +271,9 @@ public class FintList implements Iterable<Integer> {
             throw new IndexOutOfBoundsException("Lista vazia");
         }
 
-        int atual = head;
+        int atual;
+
+        atual = head;
         for (int i = 1; i <= index; i++) { // percorre a lista até elemento anterior do index desejado
             atual = elements[atual].next_index;
             if (atual == -1)
@@ -281,26 +283,26 @@ public class FintList implements Iterable<Integer> {
         return atual;
     }
 
-    int get(int index) {
+    public int get(int index) {
         int atual = getNodeIndex(index);
         return elements[atual].value;
     }
 
-    int getFirst() {
+    public int getFirst() {
         if (isEmpty()) {
             throw new IndexOutOfBoundsException("Lista vazia");
         }
         return elements[head].value;
     }
 
-    int get() {
+    public int get() {
         if (isEmpty()) {
             throw new IndexOutOfBoundsException("Lista vazia");
         }
         return elements[tail].value;
     }
 
-    int indexOf(int item) {
+    public int indexOf(int item) {
         int atual = head;
         while (atual != -1 && elements[atual].value != item) {
             atual = elements[atual].next_index;
@@ -308,11 +310,11 @@ public class FintList implements Iterable<Integer> {
         return atual;
     }
 
-    boolean contains(int item) {
+    public boolean contains(int item) {
         return indexOf(item) != -1;
     }
 
-    void map(UnaryOperator<Integer> op) {
+    public void map(UnaryOperator<Integer> op) {
         if (op == null) throw new NullPointerException("Operador invalido");
         if (isEmpty()) throw new IndexOutOfBoundsException("Lista vazia");
         int atual = head;
@@ -322,7 +324,7 @@ public class FintList implements Iterable<Integer> {
         }
     }
 
-    int reduce(BinaryOperator<Integer> op, int dfault) {
+    public int reduce(BinaryOperator<Integer> op, int dfault) {
         if (isEmpty()) return dfault;
         int atual = head;
         int total = op.apply(elements[atual].value, dfault);
@@ -333,7 +335,7 @@ public class FintList implements Iterable<Integer> {
         return total;
     }
 
-    void reverse() {
+    public void reverse() {
         if (isEmpty()) throw new IndexOutOfBoundsException("Lista vazia");
         if (!(elements[head].next_index == -1)) {
             int atual = tail;
@@ -353,7 +355,7 @@ public class FintList implements Iterable<Integer> {
         }
     }
 
-    FintList deepCopy() {
+    public FintList deepCopy() {
         FintList newList = new FintList();
 
         if (isEmpty()) //Caso esteja vazio, retorna uma lista vazia
