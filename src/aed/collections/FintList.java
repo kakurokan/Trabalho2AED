@@ -131,6 +131,7 @@ public class FintList implements Iterable<Integer> {
                 free_index++;
         }
 
+        removedNodes--;
         size++;
         return true;
     }
@@ -241,11 +242,7 @@ public class FintList implements Iterable<Integer> {
     }
 
     public void set(int index, int value) {
-        int atual = head;
-        for (int i = 0; i < index; i++) {
-            if (atual == -1) throw new IndexOutOfBoundsException("Index invalid");
-            atual = elements[atual].next_index;
-        }
+        int atual = getNodeIndex(index);
         elements[atual].value = value;
     }
 
