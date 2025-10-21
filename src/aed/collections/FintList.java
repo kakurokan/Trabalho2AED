@@ -34,7 +34,7 @@ public class FintList implements Iterable<Integer> {
         Scanner sc = new Scanner(new FileReader("src/aed/collections/botclack.txt"));
         String linha;
         String[] partes;
-        FintList teste_deep=new FintList();
+        FintList teste_deep = new FintList();
         int a, b;
         while (sc.hasNextLine()) {
             linha = sc.nextLine();
@@ -44,7 +44,7 @@ public class FintList implements Iterable<Integer> {
                 b = Integer.parseInt(partes[2]);
                 teste.addAt(a, b);
             } else if (linha.contains("add")) {
-                a=Integer.parseInt(partes[1]);
+                a = Integer.parseInt(partes[1]);
                 teste.add(a);
             } else if (linha.contains("get") && partes.length == 1) {
                 teste.get();
@@ -54,35 +54,32 @@ public class FintList implements Iterable<Integer> {
             } else if (linha.contains("getFirst")) {
                 teste.getFirst();
             } else if (linha.contains("set")) {
-                a=Integer.parseInt(partes[1]);
-                b=Integer.parseInt(partes[2]);
-                teste.set(a,b);
+                a = Integer.parseInt(partes[1]);
+                b = Integer.parseInt(partes[2]);
+                teste.set(a, b);
             } else if (linha.contains("isEmpty")) {
                 teste.isEmpty();
-            }else if (linha.contains("remove")&& partes.length == 1) {
+            } else if (linha.contains("remove") && partes.length == 1) {
                 teste.remove();
-            }else if (linha.contains("remove")) {
-                a=sc.nextInt();
+            } else if (linha.contains("remove")) {
+                a = sc.nextInt();
                 teste.remove(a);
-            }else if (linha.contains("removeAt")) {
-                a=Integer.parseInt(partes[1]);
+            } else if (linha.contains("removeAt")) {
+                a = Integer.parseInt(partes[1]);
                 teste.removeAt(a);
-            }else if (linha.contains("contains")) {
-                a=Integer.parseInt(partes[1]);
+            } else if (linha.contains("contains")) {
+                a = Integer.parseInt(partes[1]);
                 teste.contains(a);
             } else if (linha.contains("indexOf")) {
-                a=Integer.parseInt(partes[1]);
+                a = Integer.parseInt(partes[1]);
                 teste.indexOf(a);
-            }else if (linha.contains("reverse")) {
+            } else if (linha.contains("reverse")) {
                 teste.reverse();
-            }else if (linha.contains("deepCopy")) {
-                teste_deep=teste.deepCopy();
+            } else if (linha.contains("deepCopy")) {
+                teste_deep = teste.deepCopy();
             }
         }
-        System.out.println("Elementos: ");
-        for (int v: teste){
-            System.out.print(v);
-        }
+        teste.printList();
     }
 
     @Override
