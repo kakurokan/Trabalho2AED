@@ -14,6 +14,7 @@ public class FintList implements Iterable<Integer> {
     private int tail; //Ultimo elemento da lista
     private int capacity; //Tamanho total da lista
     private int removedNodes; //Quantidade de "lixo" na lista
+    private int size; //Quantidade de elementos na lista
 
     public FintList() {
         this.capacity = INITIAL_CAPACITY;
@@ -35,8 +36,12 @@ public class FintList implements Iterable<Integer> {
         teste.add(7);
         teste.add(8);
         teste.add(9);
+        teste.remove();
+        teste.remove();
+        teste.remove();
 
         System.out.println("Elementos: ");
+        System.out.println("Size: " + teste.size());
 
         for (int v : teste)
             System.out.print(v);
@@ -125,6 +130,7 @@ public class FintList implements Iterable<Integer> {
             elements[free_index] = newNode;
             elements[tail].next_index = free_index;
             tail = free_index;
+            System.out.println("Tail: " + tail);
 
             System.out.println("Esta é a " + free_index + " e adicionou " + newNode.value);
 
@@ -135,6 +141,7 @@ public class FintList implements Iterable<Integer> {
         }
 
         System.out.println("Free index: " + free_index);
+        size++;
         return true;
     }
 
@@ -161,7 +168,6 @@ public class FintList implements Iterable<Integer> {
             elements[elements[tail].prev_index].next_index = -1; //O no que apontava para a cauda para de apontar para qualquer no
 
             //Lógica do free_index para substituição no add
-            elements[tail].prev_index = -1;
             elements[tail].next_index = free_index;
             free_index = tail;
             //---
@@ -170,6 +176,7 @@ public class FintList implements Iterable<Integer> {
         }
 
         removedNodes++;
+        size--;
 
         trashCollector();
 
@@ -191,12 +198,12 @@ public class FintList implements Iterable<Integer> {
             head = elements[atual].next_index;
 
         //Lógica do free_index para substituição no add
-        elements[atual].prev_index = -1;
         elements[atual].next_index = free_index;
         free_index = atual;
         //---
 
         removedNodes++;
+        size--;
 
         trashCollector();
 
@@ -204,19 +211,26 @@ public class FintList implements Iterable<Integer> {
     }
 
     boolean remove(int item) {
-        return false;
+        int index = -1;
+        try {
+            index = get(item); //Busca onde está este ‘item’ na lista ligada
+        } catch (IndexOutOfBoundsException e) {
+            if (e.getMessage().equals("Índice maior que a lista ligada")) //Caso não seja possível encontrar estre index
+                return false;
+            throw new IndexOutOfBoundsException();
+        }
+
+        removeAt(index);
+
+        return true;
     }
 
     void addAt(int index, int item) {
         if (index < 0) {
-            throw new IndexOutOfBoundsException("Indice invalido");
+            throw new IndexOutOfBoundsException("Índice invalido");
         }
-        int atual = head;
-        for (int i = 1; i < index; i++) { // percorre a lista até elemento anterior do index desejado
-            atual = elements[atual].next_index;
-            if (atual == -1)
-                throw new IndexOutOfBoundsException("Indice maior que a lista ligada");
-        }
+        int atual = getNodeIndex(index); //Busca onde está o elemento
+        atual = elements[atual].prev_index; //Muda o ponteiro para o valor anterior
 
         int tail_temp = this.tail;
         tail = atual;
@@ -247,13 +261,6 @@ public class FintList implements Iterable<Integer> {
     }
 
     int size() {
-        if (head == -1) return 0;
-        int atual = head;
-        int size = 0;
-        while (atual != -1) {
-            atual = elements[atual].next_index;
-            size++;
-        }
         return size;
     }
 
@@ -263,7 +270,7 @@ public class FintList implements Iterable<Integer> {
 
     private int getNodeIndex(int index) {
         if (index < 0) { //verifica se o indice é valido
-            throw new IndexOutOfBoundsException("Indice invalido");
+            throw new IndexOutOfBoundsException("Índice invalido");
         }
         if (isEmpty()) { //verifica se a lista esta vazia
             throw new IndexOutOfBoundsException("Lista vazia");
@@ -273,7 +280,7 @@ public class FintList implements Iterable<Integer> {
         for (int i = 1; i <= index; i++) { // percorre a lista até elemento anterior do index desejado
             atual = elements[atual].next_index;
             if (atual == -1)
-                throw new IndexOutOfBoundsException("Indice maior que a lista ligada");
+                throw new IndexOutOfBoundsException("Índice maior que a lista ligada");
         }
 
         return atual;
