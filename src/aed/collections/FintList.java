@@ -192,7 +192,7 @@ public class FintList implements Iterable<Integer> {
         new_next[i - 1] = -1;
 
         tail = isEmpty() ? -1 : i - 1;
-        free_index = tail + 1; //O proximo espaço livre é depois do tail
+        free_index = -1; //O proximo espaço livre é depois do tail
 
         //Substitui os arrays antigos pelos novos
         elements = new_elements;
