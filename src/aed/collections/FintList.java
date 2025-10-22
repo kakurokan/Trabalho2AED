@@ -36,6 +36,7 @@ public class FintList implements Iterable<Integer> {
         String[] partes;
         FintList teste_deep = new FintList();
         int a, b;
+        UnaryOperator<Integer>  quadrado=x ->x*x;
         BinaryOperator<Integer> op_soma = (x, y) -> x + y;
         BinaryOperator<Integer> op_mult = (x, y) -> x * y;
         BinaryOperator<Integer> op_sub = (x, y) -> x - y;
@@ -114,6 +115,9 @@ public class FintList implements Iterable<Integer> {
                 System.out.println(teste.reduce(op_div, 1));
             } else if (linha.contains("sub")) {
                 System.out.println(teste.reduce(op_sub, 0));
+            } else if (linha.contains("map")) {
+                teste.map(quadrado);
+                teste.printList();
             }
         }
     }
