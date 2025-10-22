@@ -36,6 +36,10 @@ public class FintList implements Iterable<Integer> {
         String[] partes;
         FintList teste_deep = new FintList();
         int a, b;
+        BinaryOperator<Integer> op_soma = (x, y) -> x + y;
+        BinaryOperator<Integer> op_mult = (x, y) -> x * y;
+        BinaryOperator<Integer> op_sub = (x, y) -> x - y;
+        BinaryOperator<Integer> op_div = (x, y) -> x / y;
 
         while ((linha = br.readLine()) != null) {
             partes = linha.split(" ");
@@ -46,7 +50,7 @@ public class FintList implements Iterable<Integer> {
                 teste.addAt(a, b);
             } else if (linha.contains("add")) {
                 a = Integer.parseInt(partes[1]);
-                teste.add(a);
+                System.out.println(teste.add(a));
             } else if (linha.contains("get") && partes.length == 1) {
                 System.out.println(teste.get());
             } else if (linha.contains("get")) {
@@ -64,13 +68,13 @@ public class FintList implements Iterable<Integer> {
                 teste.remove();
             } else if (linha.contains("remove")) {
                 a = Integer.parseInt(partes[1]);
-                teste.remove(a);
+                System.out.println(teste.remove(a));
             } else if (linha.contains("removeAt")) {
                 a = Integer.parseInt(partes[1]);
                 teste.removeAt(a);
             } else if (linha.contains("contains")) {
                 a = Integer.parseInt(partes[1]);
-                teste.contains(a);
+                System.out.println(teste.contains(a));
             } else if (linha.contains("indexOf")) {
                 a = Integer.parseInt(partes[1]);
                 System.out.println(teste.indexOf(a));
@@ -81,6 +85,14 @@ public class FintList implements Iterable<Integer> {
                 teste_deep.printList();
             } else if (linha.contains("print")) {
                 teste.printList();
+            } else if (linha.contains("soma")) {
+                System.out.println(teste.reduce(op_soma, 0));
+            } else if (linha.contains("mult")) {
+                System.out.println(teste.reduce(op_mult, 1));
+            }else if (linha.contains("div")) {
+                System.out.println(teste.reduce(op_div, 1));
+            }else if (linha.contains("sub")) {
+                System.out.println(teste.reduce(op_sub, 0));
             }
         }
     }
