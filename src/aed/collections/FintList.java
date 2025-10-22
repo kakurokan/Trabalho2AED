@@ -41,6 +41,27 @@ public class FintList implements Iterable<Integer> {
         BinaryOperator<Integer> op_sub = (x, y) -> x - y;
         BinaryOperator<Integer> op_div = (x, y) -> x / y;
 
+        System.out.println("Available operations:");
+        System.out.println("addAt <index> <value> - Add value at specific index");
+        System.out.println("add <value> - Add value at the end");
+        System.out.println("get - Get last value");
+        System.out.println("get <index> - Get value at index");
+        System.out.println("getFirst - Get first value");
+        System.out.println("set <index> <value> - Set value at index");
+        System.out.println("isEmpty - Check if list is empty");
+        System.out.println("remove - Remove last element");
+        System.out.println("remove <value> - Remove first occurrence of value");
+        System.out.println("removeAt <index> - Remove element at index");
+        System.out.println("contains <value> - Check if value exists");
+        System.out.println("indexOf <value> - Get index of first occurrence");
+        System.out.println("reverse - Reverse the list");
+        System.out.println("deepCopy - Create and print copy of list");
+        System.out.println("print - Print the list");
+        System.out.println("soma - Sum all elements");
+        System.out.println("mult - Multiply all elements");
+        System.out.println("div - Divide all elements");
+        System.out.println("sub - Subtract all elements\n");
+
         while ((linha = br.readLine()) != null) {
             partes = linha.split(" ");
 
@@ -89,9 +110,9 @@ public class FintList implements Iterable<Integer> {
                 System.out.println(teste.reduce(op_soma, 0));
             } else if (linha.contains("mult")) {
                 System.out.println(teste.reduce(op_mult, 1));
-            }else if (linha.contains("div")) {
+            } else if (linha.contains("div")) {
                 System.out.println(teste.reduce(op_div, 1));
-            }else if (linha.contains("sub")) {
+            } else if (linha.contains("sub")) {
                 System.out.println(teste.reduce(op_sub, 0));
             }
         }
