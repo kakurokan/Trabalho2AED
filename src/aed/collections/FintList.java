@@ -11,7 +11,9 @@ import java.util.function.UnaryOperator;
 public class FintList implements Iterable<Integer> {
     private static final int INITIAL_CAPACITY = 10;
 
-    private IntNode[] elements; //Array de elementos da lista
+    private int[] elements; //Array de elementos da lista
+    private int[] next_index;
+    private int[] prev_index;
     private int free_index; //Tamanho da lista de elementos vazios
     private int head; //Primeiro elemento da lista
     private int tail; //Ultimo elemento da lista
@@ -21,7 +23,9 @@ public class FintList implements Iterable<Integer> {
 
     public FintList() {
         this.capacity = INITIAL_CAPACITY;
-        this.elements = new IntNode[capacity];
+        this.elements = new int[capacity];
+        this.next_index = new int[capacity];
+        this.prev_index = new int[capacity];
         this.free_index = 0;
         this.tail = -1;
         this.head = -1;
@@ -132,9 +136,8 @@ public class FintList implements Iterable<Integer> {
             int atual = head;
 
             while (atual != -1) {
-                IntNode atualNode = elements[atual];
-                action.accept(atualNode.value);
-                atual = atualNode.next_index;
+                action.accept(elements[atual]);
+                atual = next_index[atual];
             }
         }
     }
@@ -180,30 +183,33 @@ public class FintList implements Iterable<Integer> {
             this.head = this.free_index;
             this.tail = this.free_index;
 
-            elements[this.free_index] = new IntNode(item, -1, -1);
+            elements[this.free_index] = item;
+            next_index[this.free_index] = -1;
+            prev_index[this.free_index] = -1;
+
             free_index++;
         } else {
 
             if (free_index >= capacity)
                 resize(capacity << 1); //Dobra o tamanho quase o array não seja o suficiente
 
-            IntNode newNode = new IntNode(item, -1, tail);
-
-            int next_free_index = free_index;
-            if (elements[free_index] != null) //Caso exista espaço lixo dentro do array
+            int next_free_index;
+            if (removedNodes > 0) //Caso exista espaço lixo dentro do array
             {
-                next_free_index = elements[free_index].next_index; //Guarda o proximo espaço lixo
+                next_free_index = next_index[free_index]; //Guarda o proximo espaço lixo
                 removedNodes--;
+            } else {
+                next_free_index = free_index + 1;
             }
 
-            elements[free_index] = newNode;
-            elements[tail].next_index = free_index;
+            elements[free_index] = item;
+            next_index[free_index] = -1;
+            prev_index[free_index] = tail;
+
+            next_index[tail] = free_index;
             tail = free_index;
 
-            if (next_free_index != free_index)
-                free_index = next_free_index;
-            else
-                free_index++;
+            free_index = next_free_index;
         }
         size++;
         return true;
@@ -301,40 +307,40 @@ public class FintList implements Iterable<Integer> {
         }
 
         if (free_index >= capacity)
-            resize(capacity << 1); //Dobra o tamanho quase o array não seja o suficiente
+            resize(capacity << 1); //Dobra o tamanho caso o array não seja o suficiente
 
-        int next_free_index = free_index;
-        if (elements[free_index] != null) //Caso exista espaço lixo dentro do array
+        int next_free_index;
+        if (removedNodes > 0) //Caso exista espaço lixo dentro do array
         {
-            next_free_index = elements[free_index].next_index; //Guarda o proximo espaço lixo
+            next_free_index = next_index[free_index]; //Guarda o proximo espaço lixo
             removedNodes--;
+        } else {
+            next_free_index = free_index + 1;
         }
 
         int atual = getNodeIndex(index); //Busca onde está o elemento
 
-        int prev_index = -1;
+        int temp_prev_index = -1;
 
         if (atual != -1)
-            prev_index = elements[atual].prev_index;
+            temp_prev_index = prev_index[atual];
         else
             tail = free_index;
 
-        elements[free_index] = new IntNode(item, atual, prev_index);
+        elements[free_index] = item;
+        next_index[free_index] = atual;
+        prev_index[free_index] = temp_prev_index;
 
-        if (elements[free_index].prev_index == -1) {
+        if (prev_index[free_index] == -1) {
             head = free_index;
         } else if (atual != -1) {
-            elements[elements[atual].prev_index].next_index = free_index;
+            next_index[prev_index[atual]] = free_index;
         }
 
         if (atual != -1)
-            elements[atual].prev_index = free_index;
+            prev_index[atual] = free_index;
 
-        if (next_free_index != free_index)
-            free_index = next_free_index;
-        else
-            free_index++;
-
+        free_index = next_free_index
         size++;
     }
 
