@@ -35,6 +35,18 @@ public class FintList implements Iterable<Integer> {
         this.size = 0;
     }
 
+    private FintList(int size, int removedNodes, int capacity, int tail, int head, int free_index, int[] prev_index, int[] next_index, int[] elements) {
+        this.size = size;
+        this.removedNodes = removedNodes;
+        this.capacity = capacity;
+        this.tail = tail;
+        this.head = head;
+        this.free_index = free_index;
+        this.prev_index = prev_index;
+        this.next_index = next_index;
+        this.elements = elements;
+    }
+
     public static void main(String[] args) throws IOException {
         FintList teste = new FintList();
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -165,12 +177,14 @@ public class FintList implements Iterable<Integer> {
         int i = 1;
         while (atual != -1) {
             new_elements[i] = elements[atual];
-            new_next[i] = (next_index[atual] != -1) ? i + 1 : -1;
+            new_next[i] = i + 1;
             new_prev[i] = i - 1;
 
             atual = next_index[atual];
             i++;
         }
+
+        new_next[i - 1] = -1;
 
         tail = isEmpty() ? -1 : i - 1;
         free_index = tail + 1; //O proximo espaço livre é depois do tail
@@ -223,7 +237,7 @@ public class FintList implements Iterable<Integer> {
     }
 
     private void trashCollector() {
-        if (removedNodes > (capacity * 0.75)) { //Caso mais de 3/4 do array for lixo
+        if (capacity >= (size << 1) && removedNodes >= (capacity * 0.75)) { //Caso mais de 3/4 do array for lixo
             resize(Math.max(capacity >> 1, INITIAL_CAPACITY)); //Diminui para metade da capacidade
         }
     }
@@ -440,12 +454,11 @@ public class FintList implements Iterable<Integer> {
     public void reverse() {
         if (isEmpty()) throw new IndexOutOfBoundsException("Lista vazia");
         if (!(next_index[head] == -1)) {
-            int atual = head, next, prev = -1;
+            int atual = head, next;
             while (atual != -1) {
                 next = next_index[atual];  //guarda o next para depois alterar o prev
-                next_index[atual] = prev;
+                next_index[atual] = prev_index[atual];
                 prev_index[atual] = next; //inverte o prev para ser o next e vise versa
-                prev = atual;
                 atual = next;
             }
             atual = head; //inverte o tail e o head
@@ -456,15 +469,34 @@ public class FintList implements Iterable<Integer> {
     }
 
     public FintList deepCopy() {
-        FintList newList = new FintList();
-
         if (isEmpty()) //Caso esteja vazio, retorna uma lista vazia
-            return newList;
+            return new FintList();
 
-        for (int v : this)
-            newList.add(v);
+        //Novos arrays
+        int[] new_elements = new int[capacity];
+        int[] new_next = new int[capacity];
+        int[] new_prev = new int[capacity];
 
-        return newList;
+        int atual = next_index[head];
+
+        new_elements[0] = elements[head];
+        new_prev[0] = -1;
+        new_next[0] = (atual != -1) ? 1 : -1;
+
+        int i = 1;
+
+        while (atual != -1) {
+            new_elements[i] = elements[atual];
+            new_next[i] = i + 1;
+            new_prev[i] = i - 1;
+            atual = next_index[atual];
+
+            i++;
+        }
+
+        new_next[i - 1] = -1;
+
+        return new FintList(size, 0, capacity, i - 1, 0, i, new_prev, new_next, new_elements);
     }
 
     private void printList() {
