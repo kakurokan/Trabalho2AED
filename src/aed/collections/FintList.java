@@ -157,7 +157,7 @@ public class FintList implements Iterable<Integer> {
                 //Cria uma nova cabeça
                 new_elements[0] = elements[head];
                 new_next[0] = (atual != -1) ? 1 : -1;
-                prev_index[0] = -1;
+                new_prev[0] = -1;
                 head = 0;
             }
 
@@ -328,8 +328,6 @@ public class FintList implements Iterable<Integer> {
         }
 
         int atual = getNodeIndex(index); //Busca onde está o elemento
-        if (atual == -1)
-            return;
 
         elements[free_index] = item;
         next_index[free_index] = atual;
@@ -499,7 +497,9 @@ public class FintList implements Iterable<Integer> {
 
         @Override
         public Integer next() {
-            return next_index[nextNodeIndex];
+            int result = elements[nextNodeIndex];
+            nextNodeIndex = next_index[nextNodeIndex];
+            return result;
         }
 
         @Override
