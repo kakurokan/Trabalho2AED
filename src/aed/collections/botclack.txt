@@ -1,4 +1,3 @@
-add 5
-add 1
-add 3
-print
+        this.elements = new int[capacity];
+        this.next_index = new int[capacity];
+        this.prev_index = new int[capacity];
