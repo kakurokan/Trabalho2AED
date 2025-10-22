@@ -148,37 +148,31 @@ public class FintList implements Iterable<Integer> {
         int[] new_next = new int[new_capacity];
         int[] new_prev = new int[new_capacity];
 
-        if (new_capacity < capacity) { //Caso esteja diminuindo o array
-            int atual = -1;
+        int atual = -1;
 
-            if (!isEmpty()) {
-                atual = next_index[head];
+        if (!isEmpty()) {
+            atual = next_index[head];
 
-                //Cria uma nova cabeça
-                new_elements[0] = elements[head];
-                new_next[0] = (atual != -1) ? 1 : -1;
-                new_prev[0] = -1;
-                head = 0;
-            }
-
-            int i = 1;
-            while (atual != -1) {
-                new_elements[i] = elements[atual];
-                new_next[i] = (next_index[atual] != -1) ? i + 1 : -1;
-                new_prev[i] = i - 1;
-
-                atual = next_index[atual];
-                i++;
-            }
-
-            tail = isEmpty() ? -1 : i - 1;
-            free_index = tail + 1; //O proximo espaço livre é depois do tail
-            removedNodes = 0; //Não há mais lixo
-        } else { //Caso estejamos aumentando o array
-            System.arraycopy(elements, 0, new_elements, 0, capacity);
-            System.arraycopy(next_index, 0, new_next, 0, capacity);
-            System.arraycopy(prev_index, 0, new_prev, 0, capacity);
+            //Cria uma nova cabeça
+            new_elements[0] = elements[head];
+            new_next[0] = (atual != -1) ? 1 : -1;
+            new_prev[0] = -1;
+            head = 0;
         }
+
+        int i = 1;
+        while (atual != -1) {
+            new_elements[i] = elements[atual];
+            new_next[i] = (next_index[atual] != -1) ? i + 1 : -1;
+            new_prev[i] = i - 1;
+
+            atual = next_index[atual];
+            i++;
+        }
+
+        tail = isEmpty() ? -1 : i - 1;
+        free_index = tail + 1; //O proximo espaço livre é depois do tail
+        removedNodes = 0; //Não há mais lixo
 
         //Substitui os arrays antigos pelos novos
         elements = new_elements;
