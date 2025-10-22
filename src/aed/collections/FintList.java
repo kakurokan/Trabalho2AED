@@ -11,9 +11,11 @@ import java.util.function.UnaryOperator;
 public class FintList implements Iterable<Integer> {
     private static final int INITIAL_CAPACITY = 10;
 
-    private int[] elements; //Array de elementos da lista
+    //Arrays de elementos da lista
+    private int[] elements;
     private int[] next_index;
     private int[] prev_index;
+
     private int free_index; //Tamanho da lista de elementos vazios
     private int head; //Primeiro elemento da lista
     private int tail; //Ultimo elemento da lista
@@ -38,7 +40,7 @@ public class FintList implements Iterable<Integer> {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String linha;
         String[] partes;
-        FintList teste_deep = new FintList();
+        FintList teste_deep;
         int a, b;
         BinaryOperator<Integer> op_soma = Integer::sum;
         BinaryOperator<Integer> op_mult = (x, y) -> x * y;
@@ -260,8 +262,6 @@ public class FintList implements Iterable<Integer> {
 
     public int removeAt(int index) {
         int atual = getNodeIndex(index);
-        if (atual == -1)
-            throw new IndexOutOfBoundsException();
         if (atual == tail)
             return remove();
 
@@ -297,11 +297,9 @@ public class FintList implements Iterable<Integer> {
     }
 
     public void addAt(int index, int item) {
-        if (index < 0) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Índice invalido");
         }
-        if (isEmpty() && index != 0)
-            throw new IndexOutOfBoundsException("Lista vazia");
         if (index == size) {
             if (add(item))
                 return;
@@ -321,7 +319,9 @@ public class FintList implements Iterable<Integer> {
             next_free_index = free_index + 1;
         }
 
-        int atual = getNodeIndex(index); //Busca onde está o elemento
+        int atual;
+
+        atual = getNodeIndex(index); //Busca onde está o elemento
 
         elements[free_index] = item;
         next_index[free_index] = atual;
@@ -341,8 +341,6 @@ public class FintList implements Iterable<Integer> {
 
     public void set(int index, int value) {
         int atual = getNodeIndex(index);
-        if (atual == -1)
-            throw new IndexOutOfBoundsException("Lista vazia");
         elements[atual] = value;
     }
 
@@ -355,13 +353,9 @@ public class FintList implements Iterable<Integer> {
     }
 
     private int getNodeIndex(int index) {
-        if (index < 0 || index >= size) { //verifica se o indice é valido
+        if (index < 0 || index >= size) { //verifica se o índice é valido
             throw new IndexOutOfBoundsException("Índice invalido");
         }
-        if (isEmpty()) { //verifica se a lista esta vazia
-            return -1;
-        }
-
         int atual;
 
         if (index < (size >> 1)) {
@@ -381,8 +375,6 @@ public class FintList implements Iterable<Integer> {
 
     public int get(int index) {
         int atual = getNodeIndex(index);
-        if (atual == -1)
-            throw new IndexOutOfBoundsException("Lista vazia");
         return elements[atual];
     }
 
@@ -412,7 +404,13 @@ public class FintList implements Iterable<Integer> {
     }
 
     public boolean contains(int item) {
-        return indexOf(item) != -1;
+        int atual = head;
+        while (atual != -1) {
+            if (elements[atual] == item)
+                return true;
+            atual = next_index[atual];
+        }
+        return false;
     }
 
     public void map(UnaryOperator<Integer> op) {
