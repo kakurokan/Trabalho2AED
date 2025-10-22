@@ -78,10 +78,9 @@ public class FintList implements Iterable<Integer> {
             } else if (linha.contains("deepCopy")) {
                 teste_deep = teste.deepCopy();
                 teste_deep.printList();
-            }else if(linha.contains("print")){
-                teste.printList();
             }
         }
+        teste.printList();
     }
 
     @Override
@@ -400,20 +399,21 @@ public class FintList implements Iterable<Integer> {
 
         return total;
     }
+
     public void reverse() {
         if (isEmpty()) throw new IndexOutOfBoundsException("Lista vazia");
         if (!(elements[head].next_index == -1)) {
-            int atual=head,next,prev=-1;
-            while (atual!=-1){
-                next=elements[atual].next_index;  //guarda o next para depois alterar o prev
-                elements[atual].next_index=prev;
-                elements[atual].prev_index=next; //inverte o prev para ser o next e vise versa
-                prev=atual;
-                atual=next;
+            int atual = head, next, prev = -1;
+            while (atual != -1) {
+                next = elements[atual].next_index;  //guarda o next para depois alterar o prev
+                elements[atual].next_index = prev;
+                elements[atual].prev_index = next; //inverte o prev para ser o next e vise versa
+                prev = atual;
+                atual = next;
             }
-            atual=head; //inverte o tail e o head
-            head=tail;
-            tail=atual;
+            atual = head; //inverte o tail e o head
+            head = tail;
+            tail = atual;
         }
 
     }
@@ -426,6 +426,7 @@ public class FintList implements Iterable<Integer> {
 
         for (int v : this)
             newList.add(v);
+
         return newList;
     }
 
