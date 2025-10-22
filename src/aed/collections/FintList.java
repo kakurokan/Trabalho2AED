@@ -161,43 +161,29 @@ public class FintList implements Iterable<Integer> {
         }
     }
 
-    private void resize(int new_capacity) {
+    private void grow(int new_capacity) {
+        if (isEmpty())
+            return;
 
         //Novos arrays
         int[] new_elements = new int[new_capacity];
         int[] new_next = new int[new_capacity];
         int[] new_prev = new int[new_capacity];
 
-        int atual = -1;
+        int atual = this.head;
 
-        if (!isEmpty()) {
-            atual = next_index[head];
-
-            //Cria uma nova cabeça
-            new_elements[0] = elements[head];
-            new_next[0] = (atual != -1) ? 1 : -1;
-            new_prev[0] = -1;
-            head = 0;
-        }
-
-        int i = 1;
-        while (atual != -1) {
+        for (int i = 0, j = -1, k = 1; i < size; i++, j++, k++) {
             new_elements[i] = elements[atual];
-            new_next[i] = i + 1;
-            new_prev[i] = i - 1;
+            new_next[i] = k;
+            new_prev[i] = j;
 
             atual = next_index[atual];
-            i++;
         }
 
-        if (!isEmpty()) {
-            new_next[i - 1] = -1;
-        }
-
-        new_next[i - 1] = -1;
-
-        tail = isEmpty() ? -1 : i - 1;
-        free_index = -1; //O proximo espaço livre é depois do tail
+        this.head = 0;
+        this.tail = size - 1;
+        new_next[tail] = -1;
+        this.free_index = -1;
 
         //Substitui os arrays antigos pelos novos
         elements = new_elements;
@@ -212,7 +198,7 @@ public class FintList implements Iterable<Integer> {
             return false;
 
         if (free_index == -1 && size == capacity)
-            resize(capacity << 1); //Dobra o tamanho quase o array não seja o suficiente
+            grow(capacity << 1); //Dobra o tamanho quase o array não seja o suficiente
 
         int next_free_index = -1;
         int slot = size;
@@ -244,11 +230,11 @@ public class FintList implements Iterable<Integer> {
         lastUsedNode = -1;
     }
 
-    private void trashCollector() {
+/*    private void trashCollector() {
         if (capacity >> 2 > size && capacity > INITIAL_CAPACITY) { //Caso mais de 3/4 do array for lixo
             resize(Math.max(capacity >> 1, INITIAL_CAPACITY)); //Diminui para metade da capacidade
         }
-    }
+    }*/
 
     public int remove() {
         if (isEmpty())
@@ -330,7 +316,7 @@ public class FintList implements Iterable<Integer> {
         }
 
         if (free_index == -1 && size >= capacity)
-            resize(capacity << 1); //Dobra o tamanho caso o array não seja o suficiente
+            grow(capacity << 1); //Dobra o tamanho caso o array não seja o suficiente
 
         int next_free_index = -1;
         int slot = size;
@@ -361,8 +347,6 @@ public class FintList implements Iterable<Integer> {
 
         free_index = next_free_index;
         size++;
-
-        System.out.println("head: " + head);
     }
 
     public void set(int index, int value) {
@@ -511,7 +495,7 @@ public class FintList implements Iterable<Integer> {
             return new FintList();
 
         FintList new_list = new FintList(this.size);
-        int atual = head;
+        int atual = this.head;
 
         for (int i = 0, j = -1, k = 1; i < size; i++, j++, k++) {
             new_list.elements[i] = elements[atual];
@@ -522,8 +506,8 @@ public class FintList implements Iterable<Integer> {
         }
 
         new_list.head = 0;
-        new_list.size = size;
-        new_list.tail = size - 1;
+        new_list.size = this.size;
+        new_list.tail = this.size - 1;
         new_list.next_index[new_list.tail] = -1;
 
         return new_list;
