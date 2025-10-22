@@ -38,18 +38,19 @@ public class FintList implements Iterable<Integer> {
         this.lastArrayPosition = -1;
     }
 
-    private FintList(int size, int capacity, int tail, int head, int[] prev_index, int[] next_index, int[] elements) {
-        this.size = size;
+    private FintList(int capacity) {
         this.capacity = capacity;
-        this.tail = tail;
-        this.head = head;
+        this.elements = new int[capacity];
+        this.next_index = new int[capacity];
+        this.prev_index = new int[capacity];
         this.free_index = -1;
-        this.prev_index = prev_index;
-        this.next_index = next_index;
-        this.elements = elements;
+        this.tail = -1;
+        this.head = -1;
+        this.size = 0;
         this.lastUsedNode = -1;
         this.lastArrayPosition = -1;
     }
+
 
     public static void main(String[] args) throws IOException {
         FintList teste = new FintList();
@@ -95,13 +96,13 @@ public class FintList implements Iterable<Integer> {
             } else if (linha.startsWith("add")) {
                 a = Integer.parseInt(partes[1]);
                 System.out.println(teste.add(a));
+            } else if (linha.startsWith("getFirst")) {
+                System.out.println(teste.getFirst());
             } else if (linha.startsWith("get") && partes.length == 1) {
                 System.out.println(teste.get());
             } else if (linha.startsWith("get")) {
                 a = Integer.parseInt(partes[1]);
                 System.out.println(teste.get(a));
-            } else if (linha.startsWith("getFirst")) {
-                System.out.println(teste.getFirst());
             } else if (linha.startsWith("set")) {
                 a = Integer.parseInt(partes[1]);
                 b = Integer.parseInt(partes[2]);
@@ -187,6 +188,10 @@ public class FintList implements Iterable<Integer> {
 
             atual = next_index[atual];
             i++;
+        }
+
+        if (!isEmpty()) {
+            new_next[i - 1] = -1;
         }
 
         new_next[i - 1] = -1;
@@ -275,8 +280,6 @@ public class FintList implements Iterable<Integer> {
 
         size--;
 
-        trashCollector();
-
         return node_value;
     }
 
@@ -302,8 +305,6 @@ public class FintList implements Iterable<Integer> {
 
         size--;
 
-        trashCollector();
-
         return result;
     }
 
@@ -328,7 +329,7 @@ public class FintList implements Iterable<Integer> {
                 throw new IndexOutOfBoundsException("Índice inválido");
         }
 
-        if (free_index == -1 && size == capacity)
+        if (free_index == -1 && size >= capacity)
             resize(capacity << 1); //Dobra o tamanho caso o array não seja o suficiente
 
         int next_free_index = -1;
@@ -350,7 +351,7 @@ public class FintList implements Iterable<Integer> {
         lastUsedNode = index;
         lastArrayPosition = slot;
 
-        if (prev_index[slot] == -1) {
+        if (index == 0) {
             head = slot;
         } else {
             next_index[prev_index[atual]] = slot;
@@ -360,6 +361,8 @@ public class FintList implements Iterable<Integer> {
 
         free_index = next_free_index;
         size++;
+
+        System.out.println("head: " + head);
     }
 
     public void set(int index, int value) {
@@ -385,23 +388,26 @@ public class FintList implements Iterable<Integer> {
         int atual;
 
         int indexProximity = Math.abs(index - lastUsedNode);
+        int tailProximity = (size - 1 - index);
 
-        if (lastArrayPosition != -1 && indexProximity < index && indexProximity < (size - 1 - index)) {
+        if (lastArrayPosition != -1 && indexProximity <= index && indexProximity <= tailProximity) {
 
+            atual = lastArrayPosition;
             if (index < lastUsedNode) {
                 for (int i = lastUsedNode; i > index; i--) { // percorre a lista até elemento anterior do index desejado
-                    lastArrayPosition = prev_index[lastArrayPosition];
+                    atual = prev_index[atual];
                 }
             } else {
                 for (int i = lastUsedNode; i < index; i++) { // percorre a lista até elemento anterior do index desejado
-                    lastArrayPosition = next_index[lastArrayPosition];
+                    atual = next_index[atual];
                 }
             }
 
+            lastArrayPosition = atual;
             lastUsedNode = index;
             return lastArrayPosition;
         }
-        if (index < (size >> 1)) {
+        if (index <= tailProximity) {
             atual = head;
             for (int i = 0; i < index; i++) { // percorre a lista até elemento anterior do index desejado
                 atual = next_index[atual];
@@ -504,31 +510,23 @@ public class FintList implements Iterable<Integer> {
         if (isEmpty()) //Caso esteja vazio, retorna uma lista vazia
             return new FintList();
 
-        //Novos arrays
-        int[] new_elements = new int[capacity];
-        int[] new_next = new int[capacity];
-        int[] new_prev = new int[capacity];
+        FintList new_list = new FintList(this.size);
+        int atual = head;
 
-        int atual = next_index[head];
+        for (int i = 0, j = -1, k = 1; i < size; i++, j++, k++) {
+            new_list.elements[i] = elements[atual];
+            new_list.next_index[i] = k;
+            new_list.prev_index[i] = j;
 
-        new_elements[0] = elements[head];
-        new_prev[0] = -1;
-        new_next[0] = (atual != -1) ? 1 : -1;
-
-        int i = 1;
-
-        while (atual != -1) {
-            new_elements[i] = elements[atual];
-            new_next[i] = i + 1;
-            new_prev[i] = i - 1;
             atual = next_index[atual];
-
-            i++;
         }
 
-        new_next[i - 1] = -1;
+        new_list.head = 0;
+        new_list.size = size;
+        new_list.tail = size - 1;
+        new_list.next_index[new_list.tail] = -1;
 
-        return new FintList(size, capacity, i - 1, 0, new_prev, new_next, new_elements);
+        return new_list;
     }
 
     private void printList() {

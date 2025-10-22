@@ -9,7 +9,6 @@ public class TemporalAnalysisUtils {
     private static final int DEFAULT_TRIALS = 30;
     private static final int MINIMUM_COMPLEXITY = 125;
 
-
     public static <T> void runDoublingRatioTest(Function<Integer, T> exampleGenerator, Consumer<T> methodToTest, int iterations) {
         assert (iterations > 0);
         int n = MINIMUM_COMPLEXITY;
