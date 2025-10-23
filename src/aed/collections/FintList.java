@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
 public class FintList implements Iterable<Integer> {
-    private static final int INITIAL_CAPACITY = 5;
+    private static final int INITIAL_CAPACITY = 10;
 
     //Arrays de elementos da lista
     private int[] elements;
