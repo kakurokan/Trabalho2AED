@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
 public class FintList implements Iterable<Integer> {
-    private static final int INITIAL_CAPACITY = 10;
+    private static final int INITIAL_CAPACITY = 100;
 
     //Arrays de elementos da lista
     private int[] elements;
@@ -58,10 +58,10 @@ public class FintList implements Iterable<Integer> {
         for (int i = 0; i < 100; i++) {
             teste.addAt(i, i);
         }
-        for (int i = 100; i >= 0; i--) {
-            teste.removeAt(i);
+        for (int i = 0; i < teste.size(); i += 2) {
+            System.out.println(teste.get(i));
         }
-
+        
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String linha;
         String[] partes;
@@ -314,6 +314,7 @@ public class FintList implements Iterable<Integer> {
     public void addAt(int index, int item) {
         if (index == size) {
             add(item);
+            return;
         }
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Índice invalido");
@@ -338,7 +339,6 @@ public class FintList implements Iterable<Integer> {
         next_index[slot] = atual;
         prev_index[slot] = prev_index[atual];
 
-        lastUsedNode = index;
         lastArrayPosition = slot;
 
         if (index == 0) {
@@ -413,6 +413,12 @@ public class FintList implements Iterable<Integer> {
     }
 
     public int get(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Índice invalido");
+        }
+        if (index == 0)
+            return elements[head];
+
         int atual = getNodeIndex(index);
         return elements[atual];
     }
