@@ -47,7 +47,7 @@ public class FintList implements Iterable<Integer> {
         this.free_index = -1;
         this.tail = -1;
         this.head = -1;
-        this.size = size;
+        this.size = 0;
         this.lastUsedNode = -1;
         this.lastArrayPosition = -1;
     }
@@ -485,11 +485,11 @@ public class FintList implements Iterable<Integer> {
         if (isEmpty()) //Caso esteja vazio, retorna uma lista vazia
             return new FintList();
 
-        FintList new_list = new FintList(this.size);
+        FintList new_list = new FintList(this.capacity);
 
-        new_list.elements = Arrays.copyOf(this.elements, this.size);
-        new_list.next_index = Arrays.copyOf(this.next_index, this.size);
-        new_list.prev_index = Arrays.copyOf(this.prev_index, this.size);
+        new_list.elements = Arrays.copyOf(this.elements, this.capacity);
+        new_list.next_index = Arrays.copyOf(this.next_index, this.capacity);
+        new_list.prev_index = Arrays.copyOf(this.prev_index, this.capacity);
 
         new_list.head = this.head;
         new_list.size = this.size;
