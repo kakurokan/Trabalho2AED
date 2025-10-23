@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
 public class FintList implements Iterable<Integer> {
-    private static final int INITIAL_CAPACITY = 10;
+    private static final int INITIAL_CAPACITY = 5;
 
     //Arrays de elementos da lista
     private int[] elements;
@@ -39,8 +39,8 @@ public class FintList implements Iterable<Integer> {
         this.lastArrayPosition = -1;
     }
 
-    private FintList(int size) {
-        this.capacity = size;
+    private FintList(int capacity) {
+        this.capacity = capacity;
         this.elements = new int[capacity];
         this.next_index = new int[capacity];
         this.prev_index = new int[capacity];
@@ -169,33 +169,15 @@ public class FintList implements Iterable<Integer> {
         int[] new_next = new int[new_capacity];
         int[] new_prev = new int[new_capacity];
 
-        // A cópia só acontece se a lista não estiver vazia
-        if (!isEmpty()) {
-            int atual = this.head;
+        System.arraycopy(this.elements, 0, new_elements, 0, size);
+        System.arraycopy(this.next_index, 0, new_next, 0, size);
+        System.arraycopy(this.prev_index, 0, new_prev, 0, size);
 
-            for (int i = 0, j = -1, k = 1; i < size; i++, j++, k++) {
-                new_elements[i] = elements[atual];
-                new_next[i] = k;
-                new_prev[i] = j;
+        this.elements = new_elements;
+        this.prev_index = new_prev;
+        this.next_index = new_next;
 
-                atual = next_index[atual];
-
-                if (i == lastUsedNode && lastArrayPosition != -1)
-                    lastArrayPosition = i;
-            }
-
-            this.head = 0;
-            this.tail = size - 1;
-            new_next[this.tail] = -1;
-        }
-
-        this.free_index = -1; // A nova lista nunca tem free slots
-
-        // Substituir os arrays
-        elements = new_elements;
-        next_index = new_next;
-        prev_index = new_prev;
-        capacity = new_capacity;
+        this.capacity = new_capacity;
     }
 
     public boolean add(int item) {
@@ -236,8 +218,6 @@ public class FintList implements Iterable<Integer> {
     public int remove() {
         if (isEmpty())
             throw new IndexOutOfBoundsException("Lista vazia");
-        if (lastArrayPosition == tail)
-            resetState();
 
         //Lógica do free_index para substituição no add
         next_index[tail] = free_index;
