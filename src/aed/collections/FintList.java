@@ -54,6 +54,14 @@ public class FintList implements Iterable<Integer> {
 
     public static void main(String[] args) throws IOException {
         FintList teste = new FintList();
+
+        for (int i = 0; i < 100; i++) {
+            teste.addAt(i, i);
+        }
+        for (int i = 100; i >= 0; i--) {
+            teste.removeAt(i);
+        }
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String linha;
         String[] partes;
@@ -162,30 +170,31 @@ public class FintList implements Iterable<Integer> {
     }
 
     private void grow(int new_capacity) {
-        if (isEmpty())
-            return;
-
-        //Novos arrays
+        //  Criar os novos arrays
         int[] new_elements = new int[new_capacity];
         int[] new_next = new int[new_capacity];
         int[] new_prev = new int[new_capacity];
 
-        int atual = this.head;
+        // A cópia só acontece se a lista não estiver vazia
+        if (!isEmpty()) {
+            int atual = this.head;
 
-        for (int i = 0, j = -1, k = 1; i < size; i++, j++, k++) {
-            new_elements[i] = elements[atual];
-            new_next[i] = k;
-            new_prev[i] = j;
+            for (int i = 0, j = -1, k = 1; i < size; i++, j++, k++) {
+                new_elements[i] = elements[atual];
+                new_next[i] = k;
+                new_prev[i] = j;
 
-            atual = next_index[atual];
+                atual = next_index[atual];
+            }
+
+            this.head = 0;
+            this.tail = size - 1;
+            new_next[this.tail] = -1;
         }
 
-        this.head = 0;
-        this.tail = size - 1;
-        new_next[tail] = -1;
-        this.free_index = -1;
+        this.free_index = -1; // A nova lista nunca tem free slots
 
-        //Substitui os arrays antigos pelos novos
+        // Substituir os arrays
         elements = new_elements;
         next_index = new_next;
         prev_index = new_prev;
@@ -194,9 +203,6 @@ public class FintList implements Iterable<Integer> {
     }
 
     public boolean add(int item) {
-        if (elements == null)
-            return false;
-
         if (free_index == -1 && size == capacity)
             grow(capacity << 1); //Dobra o tamanho quase o array não seja o suficiente
 
@@ -240,8 +246,10 @@ public class FintList implements Iterable<Integer> {
         if (isEmpty())
             throw new IndexOutOfBoundsException("Lista vazia");
 
-        if (lastArrayPosition == tail)
-            resetState();
+        if (lastArrayPosition == tail) {
+            lastArrayPosition = prev_index[tail];
+            lastUsedNode--;
+        }
 
         int node_value = elements[tail]; //Guarda o no para ‘posteriori’
         int node_prev = prev_index[tail];
@@ -265,14 +273,13 @@ public class FintList implements Iterable<Integer> {
         }
 
         size--;
-
         return node_value;
     }
 
     public int removeAt(int index) {
-        int atual = getNodeIndex(index);
-        if (atual == tail)
+        if (index == size - 1)
             return remove();
+        int atual = getNodeIndex(index);
 
         lastArrayPosition = next_index[atual]; //O último no que buscamos foi apagado, então o que vai estar na sua posição é o seguinte
 
@@ -305,14 +312,11 @@ public class FintList implements Iterable<Integer> {
     }
 
     public void addAt(int index, int item) {
+        if (index == size) {
+            add(item);
+        }
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Índice invalido");
-        }
-        if (index == size) {
-            if (add(item))
-                return;
-            else
-                throw new IndexOutOfBoundsException("Índice inválido");
         }
 
         if (free_index == -1 && size >= capacity)
