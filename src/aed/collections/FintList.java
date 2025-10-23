@@ -3,6 +3,7 @@ package aed.collections;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.BinaryOperator;
@@ -38,15 +39,15 @@ public class FintList implements Iterable<Integer> {
         this.lastArrayPosition = -1;
     }
 
-    private FintList(int capacity) {
-        this.capacity = capacity;
+    private FintList(int size) {
+        this.capacity = size;
         this.elements = new int[capacity];
         this.next_index = new int[capacity];
         this.prev_index = new int[capacity];
         this.free_index = -1;
         this.tail = -1;
         this.head = -1;
-        this.size = 0;
+        this.size = size;
         this.lastUsedNode = -1;
         this.lastArrayPosition = -1;
     }
@@ -485,20 +486,15 @@ public class FintList implements Iterable<Integer> {
             return new FintList();
 
         FintList new_list = new FintList(this.size);
-        int atual = this.head;
 
-        for (int i = 0, j = -1, k = 1; i < size; i++, j++, k++) {
-            new_list.elements[i] = elements[atual];
-            new_list.next_index[i] = k;
-            new_list.prev_index[i] = j;
+        new_list.elements = Arrays.copyOf(this.elements, this.size);
+        new_list.next_index = Arrays.copyOf(this.next_index, this.size);
+        new_list.prev_index = Arrays.copyOf(this.prev_index, this.size);
 
-            atual = next_index[atual];
-        }
-
-        new_list.head = 0;
+        new_list.head = this.head;
         new_list.size = this.size;
-        new_list.tail = this.size - 1;
-        new_list.next_index[new_list.tail] = -1;
+        new_list.tail = this.tail;
+        new_list.free_index = this.free_index;
 
         return new_list;
     }
