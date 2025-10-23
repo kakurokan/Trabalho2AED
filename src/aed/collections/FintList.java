@@ -209,12 +209,6 @@ public class FintList implements Iterable<Integer> {
         lastArrayPosition = -1;
     }
 
-/*    private void trashCollector() {
-        if (capacity >> 2 > size && capacity > INITIAL_CAPACITY) { //Caso mais de 3/4 do array for lixo
-            resize(Math.max(capacity >> 1, INITIAL_CAPACITY)); //Diminui para metade da capacidade
-        }
-    }*/
-
     public int remove() {
         if (isEmpty())
             throw new IndexOutOfBoundsException("Lista vazia");
