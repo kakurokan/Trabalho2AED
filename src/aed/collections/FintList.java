@@ -23,8 +23,8 @@ public class FintList implements Iterable<Integer> {
     private int tail; //Ultimo elemento da lista
     private int capacity; //Tamanho total da lista
     private int size; //Quantidade de elementos na lista
-    private int lastUsedNode; //
-    private int lastArrayPosition;
+    private int lastUsedNode; // Ultimo no logico usado para cache
+    private int lastArrayPosition; //Ultimo no fisico usado para cache
 
     public FintList() {
         this.capacity = INITIAL_CAPACITY;
