@@ -7,12 +7,12 @@ import java.util.function.Function;
 public class Main {
 
     public static void main(String[] args) {
-        ensaioGraficoAddAt();
+        ensaioGraficoRemoveAt();
     }
 
     private static void ensaioGraficoAddAt() {
         Random random = new Random();
-        int step = 50000, iterations = 30, initialComplexity = 100000;
+        int step = 500, iterations = 30, initialComplexity = 10000;
 
         System.out.println("-------------FintList-------------");
 
@@ -31,8 +31,7 @@ public class Main {
             System.out.println(i + 1 + "\t" + initialComplexity + "\t" + time / 1E6);
         }
 
-        initialComplexity = 125;
-        step = 50;
+        initialComplexity = 10000;
         System.out.println("------------LinkedList------------");
 
         Consumer<LinkedList<Integer>> testLinkedList = (list) -> {
@@ -88,33 +87,57 @@ public class Main {
     }
 
     private static void ensaioRazaoDobradaRemoveAt() {
-        Function<Integer, FintList> listGenerator = (n) ->
-        {
-            FintList list = new FintList();
-            for (int i = 0; i < n; i++)
-                list.add(i);
-            return list;
-        };
-        Consumer<FintList> test = (list) -> {
+        Consumer<FintList> fintListTest = (list) -> {
             int n = list.size();
             for (int i = 0; i < n; i++) {
                 list.removeAt(0);
             }
         };
-        Function<Integer, LinkedList<Integer>> linkedGenerator = (n) ->
-        {
-            LinkedList<Integer> list = new LinkedList<Integer>();
-            for (int i = 0; i < n; i++)
-                list.add(i);
-            return list;
-        };
-        Consumer<LinkedList<Integer>> test_linked = (list) -> {
+        Consumer<LinkedList<Integer>> linkedListTest = (list) -> {
             int n = list.size();
             for (int i = 0; i < n; i++) {
                 list.removeAt(0);
             }
         };
 
+        System.out.println("-----------------FintList-----------------");
+        TemporalAnalysisUtils.runDoublingRatioTest(Main::createSequentialFintList, fintListTest, 10);
+        System.out.println("----------------LinkedList----------------");
+        TemporalAnalysisUtils.runDoublingRatioTest(Main::createSequentialLinkedList, linkedListTest, 10);
+    }
+
+    private static void ensaioGraficoRemoveAt() {
+        int step = 500, iterations = 30, initialComplexity = 10000;
+
+        System.out.println("-------------FintList-------------");
+
+        System.out.println("i\tcomplexity\ttime(ms)");
+
+        Consumer<FintList> testFintList = (list) -> {
+            int n = list.size();
+            for (int i = 0; i < n; i++) {
+                list.removeAt(0);
+            }
+        };
+        for (int i = 0; i < iterations; i++) {
+            initialComplexity += step;
+            long time = TemporalAnalysisUtils.getAverageCPUTime(Main::createSequentialFintList, initialComplexity, testFintList, iterations);
+            System.out.println(i + 1 + "\t" + initialComplexity + "\t" + time / 1E6);
+        }
+        initialComplexity = 10000;
+        System.out.println("------------LinkedList------------");
+
+        Consumer<LinkedList<Integer>> testLinkedList = (list) -> {
+            int n = list.size();
+            for (int i = 0; i < n; i++) {
+                list.removeAt(0);
+            }
+        };
+        for (int i = 0; i < iterations; i++) {
+            initialComplexity += step;
+            long time = TemporalAnalysisUtils.getAverageCPUTime(Main::createSequentialLinkedList, initialComplexity, testLinkedList, iterations);
+            System.out.println(i + 1 + "\t" + initialComplexity + "\t" + time / 1E6);
+        }
     }
 
     private static void ensaioRazaoDobradaDeepCopy() {
