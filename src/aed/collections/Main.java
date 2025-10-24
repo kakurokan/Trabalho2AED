@@ -69,7 +69,7 @@ public class Main {
                 list.add(i);
             return list;
         };
-        
+
         Consumer<LinkedList<Integer>> linkedListTest = (list) -> {
             int n = list.size();
             for (int i = 0; i < n; i++) {
@@ -78,7 +78,7 @@ public class Main {
         };
 
         TemporalAnalysisUtils.runDoublingRatioTest(Main::createSequentialFintList, fintListTest, 10);
-        TemporalAnalysisUtils.runDoublingRatioTest(linkedListInitializer, linkedListTest, 10);
+        //TemporalAnalysisUtils.runDoublingRatioTest(linkedListInitializer, linkedListTest, 10);
     }
 
     private static FintList createSequentialFintList(int n) {
