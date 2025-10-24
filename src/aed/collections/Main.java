@@ -7,7 +7,7 @@ import java.util.function.Function;
 public class Main {
 
     public static void main(String[] args) {
-        ensaioGraficoRemoveAt();
+        ensaioRazaoDobradaRemoveAt();
     }
 
     private static void ensaioGraficoAddAt() {
@@ -87,17 +87,15 @@ public class Main {
     }
 
     private static void ensaioRazaoDobradaRemoveAt() {
+        Random random = new Random();
+
         Consumer<FintList> fintListTest = (list) -> {
             int n = list.size();
-            for (int i = 0; i < n; i++) {
-                list.removeAt(0);
-            }
+            list.removeAt(random.nextInt(n));
         };
         Consumer<LinkedList<Integer>> linkedListTest = (list) -> {
             int n = list.size();
-            for (int i = 0; i < n; i++) {
-                list.removeAt(0);
-            }
+            list.removeAt(random.nextInt(n));
         };
 
         System.out.println("-----------------FintList-----------------");
@@ -108,6 +106,7 @@ public class Main {
 
     private static void ensaioGraficoRemoveAt() {
         int step = 500, iterations = 30, initialComplexity = 10000;
+        Random random = new Random();
 
         System.out.println("-------------FintList-------------");
 
@@ -115,9 +114,7 @@ public class Main {
 
         Consumer<FintList> testFintList = (list) -> {
             int n = list.size();
-            for (int i = 0; i < n; i++) {
-                list.removeAt(0);
-            }
+            list.removeAt(random.nextInt(n));
         };
         for (int i = 0; i < iterations; i++) {
             initialComplexity += step;
@@ -129,9 +126,7 @@ public class Main {
 
         Consumer<LinkedList<Integer>> testLinkedList = (list) -> {
             int n = list.size();
-            for (int i = 0; i < n; i++) {
-                list.removeAt(0);
-            }
+            list.removeAt(random.nextInt(n));
         };
         for (int i = 0; i < iterations; i++) {
             initialComplexity += step;
