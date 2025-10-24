@@ -7,49 +7,45 @@ import java.util.function.Function;
 public class Main {
 
     public static void main(String[] args) {
-        ensaioRazaoDobradaAddAt();
+        ensaioGraficoAddAt();
     }
 
     private static void ensaioGraficoAddAt() {
         Random random = new Random();
-        int step = 50000, iterations = 50, complexity = 1000000, trials = 20;
+        int step = 50000, iterations = 30, initialComplexity = 100000;
+
+        System.out.println("-------------FintList-------------");
+
         System.out.println("i\tcomplexity\ttime(ms)");
-        Function<Integer, FintList> listGenerator = (n) ->
-        {
-            FintList list = new FintList();
-            for (int i = 0; i < n; i++)
-                list.add(i);
-            return list;
-        };
-        Consumer<FintList> test = (list) -> {
+
+        Consumer<FintList> testFintList = (list) -> {
             int n = list.size();
             for (int i = 0; i < n; i++) {
                 list.addAt(i, random.nextInt(list.size()));
             }
         };
+
         for (int i = 0; i < iterations; i++) {
-            complexity += step;
-            long time = TemporalAnalysisUtils.getAverageCPUTime(listGenerator, complexity, test, trials);
-            System.out.println(i + 1 + "\t" + complexity + "\t" + time / 1E6);
+            initialComplexity += step;
+            long time = TemporalAnalysisUtils.getAverageCPUTime(Main::createSequentialFintList, initialComplexity, testFintList, iterations);
+            System.out.println(i + 1 + "\t" + initialComplexity + "\t" + time / 1E6);
         }
 
-        Function<Integer, LinkedList<Integer>> linkedListGenerator = (n) ->
-        {
-            LinkedList<Integer> list = new LinkedList<>();
-            for (int i = 0; i < n; i++)
-                list.add(i);
-            return list;
-        };
+        initialComplexity = 125;
+        step = 50;
+        System.out.println("------------LinkedList------------");
+
         Consumer<LinkedList<Integer>> testLinkedList = (list) -> {
             int n = list.size();
             for (int i = 0; i < n; i++) {
                 list.addAt(i, random.nextInt(list.size()));
             }
         };
+
         for (int i = 0; i < iterations; i++) {
-            complexity += step;
-            long time = TemporalAnalysisUtils.getAverageCPUTime(linkedListGenerator, complexity, testLinkedList, trials);
-            System.out.println(i + 1 + "\t" + complexity + "\t" + time / 1E6);
+            initialComplexity += step;
+            long time = TemporalAnalysisUtils.getAverageCPUTime(Main::createSequentialLinkedList, initialComplexity, testLinkedList, iterations);
+            System.out.println(i + 1 + "\t" + initialComplexity + "\t" + time / 1E6);
         }
     }
 
@@ -63,13 +59,6 @@ public class Main {
             }
         };
 
-        Function<Integer, LinkedList<Integer>> linkedListInitializer = n -> {
-            LinkedList<Integer> list = new LinkedList<>();
-            for (int i = 0; i < n; i++)
-                list.add(i);
-            return list;
-        };
-
         Consumer<LinkedList<Integer>> linkedListTest = (list) -> {
             int n = list.size();
             for (int i = 0; i < n; i++) {
@@ -77,8 +66,10 @@ public class Main {
             }
         };
 
+        System.out.println("-----------------FintList-----------------");
         TemporalAnalysisUtils.runDoublingRatioTest(Main::createSequentialFintList, fintListTest, 10);
-        //TemporalAnalysisUtils.runDoublingRatioTest(linkedListInitializer, linkedListTest, 10);
+        System.out.println("----------------LinkedList----------------");
+        TemporalAnalysisUtils.runDoublingRatioTest(Main::createSequentialLinkedList, linkedListTest, 10);
     }
 
     private static FintList createSequentialFintList(int n) {
@@ -86,6 +77,13 @@ public class Main {
         for (int i = 0; i < n; i++) {
             list.add(i);
         }
+        return list;
+    }
+
+    private static LinkedList<Integer> createSequentialLinkedList(int n) {
+        LinkedList<Integer> list = new LinkedList<>();
+        for (int i = 0; i < n; i++)
+            list.add(i);
         return list;
     }
 
