@@ -2,12 +2,11 @@ package aed.collections;
 
 import java.util.Random;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class Main {
 
     public static void main(String[] args) {
-        ensaioRazaoDobradaRemoveAt();
+        ensaioRazaoDobradaDeepCopy();
     }
 
     private static void ensaioGraficoAddAt() {
@@ -136,28 +135,9 @@ public class Main {
     }
 
     private static void ensaioRazaoDobradaDeepCopy() {
-        Function<Integer, FintList> listGenerator = (n) ->
-        {
-            FintList list = new FintList();
-            for (int i = 0; i < n; i++)
-                list.add(i);
-            return list;
-        };
-        Consumer<FintList> test = (list) -> {
-            FintList para_copiar = new FintList();
-            para_copiar = list.deepCopy();
-
-        };
-        Function<Integer, LinkedList<Integer>> linkedGenerator = (n) ->
-        {
-            LinkedList<Integer> list = new LinkedList<Integer>();
-            for (int i = 0; i < n; i++)
-                list.add(i);
-            return list;
-        };
-        Consumer<LinkedList<Integer>> test_linked = (list) -> {
-            LinkedList copia = new LinkedList();
-            copia = list.shallowCopy();
-        };
+        System.out.println("-----------------FintList-----------------");
+        TemporalAnalysisUtils.runDoublingRatioTest(Main::createSequentialFintList, FintList::deepCopy, 10);
+        System.out.println("----------------LinkedList----------------");
+        TemporalAnalysisUtils.runDoublingRatioTest(Main::createSequentialLinkedList, LinkedList::shallowCopy, 10);
     }
 }
