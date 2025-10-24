@@ -23,8 +23,8 @@ public class FintList implements Iterable<Integer> {
     private int tail; //Ultimo elemento da lista
     private int capacity; //Tamanho total da lista
     private int size; //Quantidade de elementos na lista
-    private int lastUsedNode; // Ultimo no logico usado para cache
-    private int lastArrayPosition; //Ultimo no fisico usado para cache
+    private int lastUsedNode; // Ultimo no lógico usado para cache
+    private int lastArrayPosition; //Ultimo no físico usado para cache
 
     public FintList() {
         this.capacity = INITIAL_CAPACITY;
@@ -52,10 +52,7 @@ public class FintList implements Iterable<Integer> {
         this.lastArrayPosition = -1;
     }
 
-
     public static void main(String[] args) throws IOException {
-        FintList teste = new FintList();
-
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String linha;
         String[] partes;
@@ -361,19 +358,12 @@ public class FintList implements Iterable<Integer> {
                 atual = prev_index[atual];
             }
         }
-
         lastArrayPosition = atual;
         lastUsedNode = index; //Ultimo nó utilizado foi o que buscamos
         return atual;
     }
 
     public int get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Índice invalido");
-        }
-        if (index == 0)
-            return elements[head];
-
         int atual = getNodeIndex(index);
         return elements[atual];
     }

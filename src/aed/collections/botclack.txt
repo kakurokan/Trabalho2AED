@@ -1,3 +1,0 @@
-        this.elements = new int[capacity];
-        this.next_index = new int[capacity];
-        this.prev_index = new int[capacity];
