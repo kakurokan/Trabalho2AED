@@ -6,7 +6,11 @@ import java.util.function.Function;
 
 public class Main {
 
-    private static void ensaioGraficoAddAtAleatorio() {
+    public static void main(String[] args) {
+        ensaioRazaoDobradaAddAt();
+    }
+
+    private static void ensaioGraficoAddAt() {
         Random random = new Random();
         int step = 50000, iterations = 50, complexity = 1000000, trials = 20;
         System.out.println("i\tcomplexity\ttime(ms)");
@@ -49,35 +53,40 @@ public class Main {
         }
     }
 
-    private static void ensaioRazaoDobradaAddAtAleatorio() {
+    private static void ensaioRazaoDobradaAddAt() {
         Random random = new Random();
-        Function<Integer, FintList> listGenerator = (n) ->
-        {
-            FintList list = new FintList();
-            for (int i = 0; i < n; i++)
-                list.add(i);
-            return list;
-        };
-        Consumer<FintList> test = (list) -> {
+
+        Consumer<FintList> fintListTest = (list) -> {
             int n = list.size();
             for (int i = 0; i < n; i++) {
                 list.addAt(i, random.nextInt(list.size()));
             }
         };
 
-        Function<Integer, LinkedList<Integer>> linkedgenerator = n -> {
+        Function<Integer, LinkedList<Integer>> linkedListInitializer = n -> {
             LinkedList<Integer> list = new LinkedList<>();
             for (int i = 0; i < n; i++)
                 list.add(i);
             return list;
         };
-        Consumer<LinkedList<Integer>> test_linked = (list) -> {
+        
+        Consumer<LinkedList<Integer>> linkedListTest = (list) -> {
             int n = list.size();
             for (int i = 0; i < n; i++) {
                 list.addAt(i, random.nextInt(list.size()));
             }
         };
-        TemporalAnalysisUtils.runDoublingRatioTest(linkedgenerator, test_linked, 20);
+
+        TemporalAnalysisUtils.runDoublingRatioTest(Main::createSequentialFintList, fintListTest, 10);
+        TemporalAnalysisUtils.runDoublingRatioTest(linkedListInitializer, linkedListTest, 10);
+    }
+
+    private static FintList createSequentialFintList(int n) {
+        FintList list = new FintList();
+        for (int i = 0; i < n; i++) {
+            list.add(i);
+        }
+        return list;
     }
 
     private static void ensaioRazaoDobradaRemoveAt() {
@@ -108,29 +117,6 @@ public class Main {
             }
         };
 
-    }
-
-    private static void ensaioRazaoDobradaContains() {
-        Function<Integer, FintList> listGenerator = (n) ->
-        {
-            FintList list = new FintList();
-            for (int i = 0; i < n; i++)
-                list.add(i);
-            return list;
-        };
-        Consumer<FintList> test = (list) -> {
-            int n = list.size();
-            for (int i = 0; i < n; i++) {
-                list.contains(i);
-            }
-        };
-        Function<Integer, LinkedList<Integer>> linkedGenerator = (n) ->
-        {
-            LinkedList<Integer> list = new LinkedList<Integer>();
-            for (int i = 0; i < n; i++)
-                list.add(i);
-            return list;
-        };
     }
 
     private static void ensaioRazaoDobradaDeepCopy() {

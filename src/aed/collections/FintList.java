@@ -54,6 +54,9 @@ public class FintList implements Iterable<Integer> {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        FintList teste = new FintList();
+
         String linha;
         String[] partes;
         FintList teste_deep;
