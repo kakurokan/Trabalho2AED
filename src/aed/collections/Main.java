@@ -18,7 +18,6 @@ public class Main {
         System.out.println("i\tcomplexity\ttime(ms)");
 
         Consumer<FintList> fintListTest = (list) -> {
-            int n = list.size();
             list.addAt(random.nextInt(list.size()), 1);
         };
 
@@ -32,7 +31,6 @@ public class Main {
         System.out.println("------------LinkedList------------");
 
         Consumer<LinkedList<Integer>> linkedListTest = (list) -> {
-            int n = list.size();
             list.addAt(random.nextInt(list.size()), 1);
         };
 
@@ -47,12 +45,10 @@ public class Main {
         Random random = new Random();
 
         Consumer<FintList> fintListTest = (list) -> {
-            int n = list.size();
             list.addAt(random.nextInt(list.size()), 1);
         };
 
         Consumer<LinkedList<Integer>> linkedListTest = (list) -> {
-            int n = list.size();
             list.addAt(random.nextInt(list.size()), 1);
         };
 
@@ -135,7 +131,6 @@ public class Main {
 
     private static void ensaioGraficoDeepCopy() {
         int step = 790, iterations = 30, initialComplexity = 6000;
-        Random random = new Random();
 
         System.out.println("-------------FintList-------------");
 
